@@ -3,512 +3,1440 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOFIA SHOWROOM - Gestión 2026</title>
+    <title>SOFIA SHOWROOM - Gestión Contable</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+        
+        :root {
+            --brand-main: #1fbfb8;       
+            --brand-main-hover: #17a09a; 
+            --brand-light: #e9fff9;      
+            --brand-accent: #ff4f79;     
+            --brand-accent-light: #ff8fb1;
+            --brand-dark: #24303a;       
+            --bg-color: #ffffff;         
+        }
+
+        body { 
+            background-color: var(--bg-color); 
+            font-family: 'Montserrat', sans-serif; 
+            color: var(--brand-dark);
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
         .seccion { display: none; }
-        .seccion.activa { display: block; animation: fadeIn 0.2s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .nav-btn.active { background-color: #e11d48; color: white; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.2); }
-        #v-sugerencias { position: absolute; z-index: 100; width: 100%; max-height: 250px; overflow-y: auto; background: white; border-radius: 1rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); margin-top: 5px; border: 1px solid #e2e8f0; }
-        .sugerencia-item:hover { background-color: #fff1f2; }
-        .btn-excel { background-color: #166534; color: white; padding: 8px 12px; border-radius: 12px; font-size: 10px; font-weight: 800; text-transform: uppercase; transition: all 0.2s; display: flex; align-items: center; gap: 5px; border: none; cursor: pointer; }
-        .btn-excel:hover { background-color: #15803d; transform: translateY(-1px); }
+        .seccion.activa { 
+            display: block; 
+            animation: fadeIn 0.3s ease-out; 
+        }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(5px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        .h-title { 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            letter-spacing: -0.5px; 
+            color: var(--brand-dark); 
+        }
+
+        .nav-btn { 
+            color: #94a3b8; 
+            background-color: transparent; 
+            transition: all 0.2s ease; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+        .nav-btn:hover { 
+            color: white; 
+            background-color: rgba(31, 191, 184, 0.15); 
+        }
+        .nav-btn.active { 
+            background-color: var(--brand-main); 
+            color: white; 
+            font-weight: 700; 
+            box-shadow: 0 4px 10px rgba(31, 191, 184, 0.3); 
+        }
+
+        #v-sugerencias, #p-sugerencias { 
+            position: absolute; 
+            z-index: 100; 
+            width: 100%; 
+            max-height: 250px; 
+            overflow-y: auto; 
+            background: white; 
+            border-radius: 1rem; 
+            box-shadow: 0 10px 25px -5px rgba(36, 48, 58, 0.1); 
+            margin-top: 5px; 
+            border: 1px solid var(--brand-main); 
+        }
+        .sugerencia-item:hover { 
+            background-color: var(--brand-light); 
+            cursor: pointer; 
+        }
+
+        .btn-brand { 
+            background-color: var(--brand-main); 
+            color: white; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            transition: all 0.2s ease; 
+            border-radius: 0.75rem; 
+            border: none; 
+            cursor: pointer; 
+        }
+        .btn-brand:hover { 
+            background-color: var(--brand-main-hover); 
+            transform: translateY(-1px); 
+            box-shadow: 0 4px 12px rgba(31, 191, 184, 0.3); 
+        }
+        
+        .btn-excel { 
+            background-color: white; 
+            color: var(--brand-dark); 
+            padding: 8px 14px; 
+            border-radius: 8px; 
+            font-size: 11px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            transition: all 0.2s; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            border: 1px solid #cbd5e1; 
+            cursor: pointer; 
+            letter-spacing: 0.5px; 
+        }
+        .btn-excel:hover { 
+            background-color: var(--brand-light); 
+            border-color: var(--brand-main); 
+            color: var(--brand-main); 
+        }
+        
+        .input-cant-carrito { 
+            width: 55px !important; 
+            height: 38px !important; 
+            text-align: center !important; 
+            font-weight: 600 !important; 
+            font-size: 15px !important; 
+            border: 1px solid var(--brand-main) !important; 
+            border-radius: 8px !important; 
+            background: var(--brand-light) !important; 
+            color: var(--brand-main) !important; 
+        }
+        .input-cant-carrito:focus { 
+            outline: none !important; 
+            border-color: var(--brand-main) !important; 
+            background: white !important; 
+        }
+
+        .card-solid { 
+            background-color: white; 
+            border-radius: 1.25rem; 
+            border: 1px solid #e2e8f0; 
+            box-shadow: 0 4px 15px rgba(36, 48, 58, 0.05); 
+            padding: 2rem; 
+        }
+
+        input, select { 
+            border-radius: 0.75rem !important; 
+            padding: 0.7rem 1rem !important; 
+            border: 1px solid #cbd5e1 !important; 
+            font-size: 13px !important; 
+            font-weight: 600 !important; 
+            color: var(--brand-dark) !important; 
+            background-color: #f8fafc; 
+            transition: all 0.2s; 
+            appearance: none; 
+        }
+        select { 
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); 
+            background-position: right 0.5rem center; 
+            background-repeat: no-repeat; 
+            background-size: 1.5em 1.5em; 
+            padding-right: 2.5rem !important; 
+        }
+        input:focus, select:focus { 
+            border-color: var(--brand-main) !important; 
+            background-color: white !important; 
+            outline: none !important; 
+            box-shadow: 0 0 0 3px var(--brand-light) !important; 
+        }
+        
+        .logo-text { 
+            font-weight: 800; 
+            font-size: 1.5rem; 
+            color: white; 
+            text-transform: uppercase; 
+            letter-spacing: -0.5px; 
+        }
+        .logo-text span { 
+            color: var(--brand-main); 
+        }
+
+        .table-custom thead { 
+            background-color: var(--brand-light); 
+            color: var(--brand-dark); 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-size: 11px; 
+        }
+        .table-custom th { padding: 0.75rem 1rem; }
+        .table-custom td { padding: 0.75rem 1rem; border-bottom: 1px solid #f1f5f9; }
+
+        .table-mayor thead { 
+            background-color: var(--brand-main); 
+            color: white; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            font-size: 11px; 
+        }
+        .table-mayor th { padding: 1rem; border-bottom: none; }
+        .table-mayor td { padding: 0.8rem 1rem; border-bottom: 1px solid var(--brand-light); }
+        
+        label { 
+            font-size: 11px; 
+            font-weight: 700; 
+            color: #64748b; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            margin-bottom: 4px; 
+            display: block; 
+        }
+
+        .text-haber { color: var(--brand-accent-light); }
+        .text-debe { color: var(--brand-dark); }
+
+        @media print {
+            body > nav, body > main, body > div[id^="modal"] { display: none !important; }
+            body { background-color: white; color: black; }
+            #ticket-print { 
+                display: block !important; 
+                position: absolute; 
+                top: 0; 
+                left: 0; 
+                width: 100%; 
+                margin: 0; 
+                padding: 0; 
+            }
+            @page { margin: 0; }
+        }
     </style>
 </head>
-<body class="text-slate-800">
+<body>
 
-<nav class="bg-slate-900 text-white p-2 sticky top-0 z-50 shadow-xl">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-        <div class="flex items-center gap-2">
-            <img src="image_251a70.png" alt="Sofia Showroom" class="h-12 w-auto object-contain brightness-110">
-            <span class="font-black tracking-tighter text-xl italic text-rose-500">SOFIA</span>
-        </div>
-        <div class="flex gap-1 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
-            <button onclick="ir('v', this)" class="nav-btn active px-5 py-2.5 rounded-xl text-xs font-black transition-all uppercase tracking-tight">🛒 Ventas</button>
-            <button onclick="ir('s', this)" class="nav-btn px-5 py-2.5 rounded-xl text-xs font-black transition-all uppercase tracking-tight">📦 Stock</button>
-            <button onclick="ir('c', this)" class="nav-btn px-5 py-2.5 rounded-xl text-xs font-black transition-all uppercase tracking-tight">👥 Clientes</button>
-            <button onclick="ir('x', this)" class="nav-btn px-5 py-2.5 rounded-xl text-xs font-black transition-all uppercase tracking-tight">💰 Caja</button>
-            <button onclick="loadDB()" class="bg-blue-600 px-4 py-2.5 rounded-xl text-[10px] font-bold hover:bg-blue-500 transition-all uppercase">🔄 Sync</button>
+<nav class="bg-[var(--brand-dark)] p-3 sticky top-0 z-50 shadow-md border-b-[3px] border-[var(--brand-main)]">
+    <div class="max-w-[1500px] mx-auto flex flex-col xl:flex-row justify-between items-center gap-3">
+        <div class="logo-text">SOFIA <span>SHOWROOM</span></div>
+        <div class="flex gap-1.5 overflow-x-auto w-full xl:w-auto justify-center">
+            <button onclick="ir('v', this)" class="nav-btn active px-4 py-2 text-[11px] rounded-lg">Ventas</button>
+            <button onclick="ir('p', this)" class="nav-btn px-4 py-2 text-[11px] rounded-lg">Proveedores</button>
+            <button onclick="ir('s', this)" class="nav-btn px-4 py-2 text-[11px] rounded-lg">Stock</button>
+            <button onclick="ir('c', this)" class="nav-btn px-4 py-2 text-[11px] rounded-lg">Clientes</button>
+            <button onclick="ir('x', this)" class="nav-btn px-4 py-2 text-[11px] rounded-lg">Caja</button>
+            <button onclick="ir('a', this)" class="nav-btn px-4 py-2 text-[11px] rounded-lg">Balance</button>
+            <button onclick="ir('j', this)" class="nav-btn px-4 py-2 text-[11px] rounded-lg">Ajustes</button>
+            <button onclick="loadDB()" class="bg-white/10 px-4 py-2 rounded-lg text-[10px] font-bold hover:bg-white/20 text-white transition-all uppercase ml-2 border border-white/10">Sync</button>
         </div>
     </div>
 </nav>
 
-<main class="max-w-7xl mx-auto p-4 space-y-6">
-    <div id="v" class="seccion activa space-y-6">
-        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-6">
-                <div class="md:col-span-6 flex gap-2 relative">
+<main class="max-w-[1500px] mx-auto p-4 md:p-8 space-y-8 mt-2">
+    
+    <div id="v" class="seccion activa space-y-8">
+        <div class="card-solid border-t-4 border-[var(--brand-main)]">
+            <h2 class="h-title text-2xl mb-6">Punto de Venta</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8 bg-[var(--brand-light)] p-5 rounded-2xl border border-[var(--brand-main)]">
+                <div class="lg:col-span-6 flex gap-3 relative">
                     <div class="flex-1 relative">
-                        <input type="text" id="v-scan" class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-200 font-bold text-lg outline-none focus:ring-2 focus:ring-rose-500" placeholder="Buscar prenda o código..." onkeyup="buscarProductosVenta(this.value)" onkeypress="if(event.key=='Enter') addCarro()">
+                        <label class="text-[var(--brand-main)]">Buscar Prenda o Código</label>
+                        <input type="text" id="v-scan" class="w-full text-base font-bold shadow-sm" placeholder="Conecte el escáner o escriba aquí..." onkeyup="buscarProductosVenta(this.value)" onkeypress="if(event.key=='Enter') addCarro()" autofocus>
                         <div id="v-sugerencias" class="hidden"></div>
                     </div>
-                    <input type="number" id="v-cant-v" value="1" min="1" class="w-20 p-4 bg-rose-50 border border-rose-100 rounded-2xl font-bold text-center text-rose-600">
+                    <div class="w-20">
+                        <label class="text-center text-[var(--brand-main)]">Cant.</label>
+                        <input type="number" id="v-cant-v" value="1" min="1" class="w-full text-center text-xl text-[var(--brand-main)] font-bold border-[var(--brand-main)] bg-white">
+                    </div>
                 </div>
-                <div class="md:col-span-3 flex flex-col gap-2">
-                    <select id="v-pago" onchange="toggleDetallePago()" class="p-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold outline-none"></select>
-                    <select id="v-pago-detalle" class="hidden p-3 bg-rose-50 border border-rose-100 rounded-xl font-medium text-sm outline-none text-rose-600"></select>
+                
+                <div class="lg:col-span-3">
+                    <label class="text-[var(--brand-main)]">Medio de Pago Principal</label>
+                    <select id="v-pago" onchange="toggleMultiPago()" class="w-full text-sm border-[var(--brand-main)] bg-white">
+                        <option value="EFECTIVO">EFECTIVO</option>
+                        <option value="TRANSFERENCIA">TRANSFERENCIA</option>
+                        <option value="TARJETA">TARJETA</option>
+                        <option value="CUENTA CORRIENTE">CUENTA CORRIENTE</option>
+                        <option value="DIVIDIDO">PAGO DIVIDIDO</option>
+                    </select>
+                    <div id="v-multi-pago-container" class="hidden mt-2 p-3 bg-white rounded-xl border border-slate-200 space-y-2">
+                        <div class="flex gap-2">
+                            <input type="number" id="v-monto-1" placeholder="Monto 1" class="w-1/2 text-xs bg-white">
+                            <select id="v-medio-1" class="w-1/2 text-[10px] bg-white"></select>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="number" id="v-monto-2" placeholder="Monto 2" class="w-1/2 text-xs bg-white">
+                            <select id="v-medio-2" class="w-1/2 text-[10px] bg-white"></select>
+                        </div>
+                    </div>
+                    <select id="v-pago-detalle" class="hidden w-full mt-2 text-sm bg-white text-[var(--brand-dark)] border-slate-300"></select>
                 </div>
-                <select id="v-cli" class="md:col-span-3 p-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold outline-none"></select>
+                
+                <div class="lg:col-span-3">
+                    <label class="text-[var(--brand-main)]">Seleccionar Cliente</label>
+                    <select id="v-cli" class="w-full text-sm bg-white border-slate-300"></select>
+                </div>
             </div>
-            <div class="overflow-x-auto min-h-[150px] mb-4">
-                <table class="w-full text-left text-[11px] font-bold">
-                    <thead class="text-[10px] uppercase text-slate-400 border-b font-black"><tr><th class="pb-2">Producto</th><th class="pb-2">Talle</th><th class="pb-2 text-center">Cant.</th><th class="pb-2">P. Unit</th><th class="pb-2">Subtotal</th><th class="pb-2 text-right">Quitar</th></tr></thead>
-                    <tbody id="v-t" class="divide-y font-bold text-slate-600 uppercase"></tbody>
+            
+            <div class="overflow-x-auto min-h-[180px] mb-6 rounded-xl border border-slate-200">
+                <table class="w-full text-left table-custom">
+                    <thead>
+                        <tr>
+                            <th class="pl-6">Producto / Detalle</th>
+                            <th>Talle</th>
+                            <th class="text-center">Cant.</th>
+                            <th>P. Unit</th>
+                            <th>Subtotal</th>
+                            <th class="text-right pr-6">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="v-t" class="divide-y text-[var(--brand-dark)] uppercase font-semibold"></tbody>
                 </table>
             </div>
-            <div class="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-rose-50 gap-4">
-                <div class="text-4xl font-black text-slate-900 uppercase tracking-tighter">Total: <span class="text-rose-600">$</span><span id="v-tot">0</span></div>
-                <button onclick="finalizarVenta()" class="w-full md:w-auto bg-rose-600 hover:bg-rose-500 text-white px-12 py-5 rounded-2xl font-black shadow-lg uppercase text-lg transition-all active:scale-95">Registrar Venta</button>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center pt-6 border-t border-slate-100 gap-6">
+                <div class="h-title text-4xl text-[var(--brand-dark)]">TOTAL <span class="text-[var(--brand-main)] ml-2">$</span><span id="v-tot" class="text-[var(--brand-main)]">0</span></div>
+                <button onclick="finalizarVenta()" class="btn-brand w-full md:w-auto px-16 py-4 text-lg shadow-lg">Finalizar Venta</button>
             </div>
         </div>
-        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Ventas de Hoy</h3>
-                <button onclick="exportarExcel('ventas')" class="btn-excel">📥 Descargar Ventas</button>
+
+        <div class="card-solid">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest">Historial de Ventas Recientes</h3>
+                <button onclick="exportarExcel('ventas')" class="btn-excel">📥 Exportar Ventas</button>
             </div>
-            <div class="overflow-x-auto"><table class="w-full text-left text-[10px] font-bold"><thead class="text-[9px] uppercase text-slate-300 border-b font-bold"><tr><th class="pb-2">Hora</th><th class="pb-2">Cliente</th><th class="pb-2">Detalle Productos</th><th class="pb-2">Medio</th><th class="pb-2 text-right">Monto</th></tr></thead><tbody id="v-historial" class="divide-y uppercase"></tbody></table></div>
+            <div class="overflow-x-auto rounded-xl border border-slate-100 shadow-sm">
+                <table class="w-full text-left text-xs table-custom bg-white">
+                    <thead>
+                        <tr>
+                            <th class="pl-4">Hora</th>
+                            <th>Cliente</th>
+                            <th>Productos</th>
+                            <th>Medio</th>
+                            <th class="text-right pr-4">Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="v-historial" class="divide-y uppercase text-[var(--brand-dark)] font-medium"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <div id="s" class="seccion space-y-4">
-        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-black text-rose-600 uppercase italic">Inventario</h2>
-                <button onclick="exportarExcel('stock')" class="btn-excel">📥 Exportar Stock</button>
+    <div id="p" class="seccion space-y-8">
+        
+        <div class="card-solid border-t-4 border-indigo-500">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="h-title text-2xl text-[var(--brand-dark)]">Directorio de Proveedores</h2>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-10 gap-2 mb-6">
-                <input type="hidden" id="s-key">
-                <input type="text" id="s-cod" placeholder="CÓDIGO" class="p-2 border rounded-xl uppercase text-xs">
-                <input type="text" id="s-nom" placeholder="PRENDA" class="p-2 border rounded-xl text-xs">
-                <input type="text" id="s-mar" placeholder="MARCA" class="p-2 border rounded-xl text-xs">
-                <input type="text" id="s-tal" placeholder="TALLE" class="p-2 border rounded-xl text-xs">
-                <input type="text" id="s-col" placeholder="COLOR" class="p-2 border rounded-xl text-xs">
-                <input type="number" id="s-can" placeholder="CANT" class="p-2 border rounded-xl text-xs">
-                <div class="relative"><span class="absolute -top-3 left-1 text-[8px] font-bold text-slate-400">COSTO</span><input type="number" id="s-cos" oninput="calcularPrecioDesdeMargen()" class="p-2 border bg-slate-50 rounded-xl text-xs font-bold w-full"></div>
-                <div class="relative"><span class="absolute -top-3 left-1 text-[8px] font-bold text-emerald-500">% GAN</span><input type="number" id="s-margen" oninput="calcularPrecioDesdeMargen()" class="p-2 border border-emerald-100 bg-emerald-50 rounded-xl text-xs font-bold text-emerald-600 w-full"></div>
-                <div class="relative"><span class="absolute -top-3 left-1 text-[8px] font-bold text-rose-500">VENTA</span><input type="number" id="s-pre" oninput="calcularMargenDesdePrecio()" class="p-2 border border-rose-100 bg-rose-50 rounded-xl text-xs font-bold text-rose-600 w-full"></div>
-                <button onclick="pushStock()" class="bg-slate-800 text-white font-black rounded-xl py-2 uppercase text-[10px]">Guardar</button>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                <input type="hidden" id="prov-key">
+                <div class="lg:col-span-2">
+                    <label class="text-indigo-600">Razón Social / Proveedor</label>
+                    <input type="text" id="prov-nom" class="w-full uppercase bg-white border-indigo-300">
+                </div>
+                <div class="lg:col-span-1">
+                    <label class="text-indigo-600">CUIT</label>
+                    <input type="text" id="prov-cuit" class="w-full bg-white border-indigo-300">
+                </div>
+                <div class="lg:col-span-1">
+                    <label class="text-indigo-600">Condición Fiscal</label>
+                    <select id="prov-cond" class="w-full bg-white border-indigo-300">
+                        <option value="IVA RESPONSABLE INSCRIPTO">RESP. INSCRIPTO</option>
+                        <option value="MONOTRIBUTO">MONOTRIBUTO</option>
+                        <option value="EXENTO">EXENTO</option>
+                        <option value="CONSUMIDOR FINAL">CONSUMIDOR FINAL</option>
+                    </select>
+                </div>
+                <div class="lg:col-span-1">
+                    <label class="text-indigo-600">Teléfono</label>
+                    <input type="text" id="prov-tel" class="w-full bg-white border-indigo-300">
+                </div>
+                <div class="lg:col-span-1">
+                    <label class="text-indigo-600">Dirección</label>
+                    <input type="text" id="prov-dir" class="w-full uppercase bg-white border-indigo-300">
+                </div>
+                <div class="lg:col-span-6 flex items-end">
+                    <button onclick="pushProv()" class="btn-brand bg-indigo-600 hover:bg-indigo-700 w-full py-3 text-xs shadow-md">Guardar Proveedor</button>
+                </div>
             </div>
-            <input type="text" id="s-search" oninput="renderStock()" placeholder="🔍 Buscar..." class="w-full p-4 bg-slate-50 border rounded-2xl mb-4 outline-none">
-            <div class="overflow-x-auto"><table class="w-full text-left text-[11px] font-bold"><thead class="text-[10px] uppercase text-slate-400 border-b"><tr><th>Código</th><th>Producto</th><th>Marca</th><th class="text-center">Stock</th><th>Costo</th><th class="text-emerald-500">% Gan.</th><th>Venta</th><th class="text-right">Acción</th></tr></thead><tbody id="s-t" class="divide-y uppercase"></tbody></table></div>
+            <div class="mb-6">
+                <label>Buscador de Proveedores</label>
+                <input type="text" id="prov-search" oninput="renderProveedores()" placeholder="Buscar por nombre o CUIT..." class="w-full border-slate-300 bg-white">
+            </div>
+            <div id="prov-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+        </div>
+
+        <div class="card-solid border-t-4 border-slate-800">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="h-title text-2xl text-[var(--brand-dark)]">Ingreso de Compras al Stock</h2>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                <div class="lg:col-span-5 relative">
+                    <label>Buscar Prenda a Ingresar</label>
+                    <input type="text" id="p-scan" class="w-full border-slate-300 bg-white" placeholder="Nombre o código..." onkeyup="buscarProductosCompra(this.value)">
+                    <div id="p-sugerencias" class="hidden absolute z-10 w-full max-h-60 overflow-y-auto bg-white border border-slate-300 rounded-lg shadow-xl mt-1"></div>
+                </div>
+                <div class="lg:col-span-2">
+                    <label>Costo Unitario Pago ($)</label>
+                    <input type="number" id="p-costo" class="w-full font-bold text-slate-700 bg-white border-slate-300">
+                </div>
+                <div class="lg:col-span-2">
+                    <label>Cantidad</label>
+                    <input type="number" id="p-cant" value="1" min="1" class="w-full font-bold text-center bg-white border-slate-300">
+                </div>
+                <div class="lg:col-span-3 flex items-end">
+                    <button onclick="addCarroCompra()" class="btn-brand bg-slate-800 hover:bg-black w-full py-3 h-[42px] mt-1 shadow-md">Sumar al Detalle</button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto min-h-[150px] mb-6 rounded-xl border border-slate-200">
+                <table class="w-full text-left table-custom">
+                    <thead class="bg-slate-100 text-slate-600">
+                        <tr>
+                            <th class="pl-6">Producto</th>
+                            <th>Talle</th>
+                            <th class="text-center">Cant.</th>
+                            <th>Costo Unit.</th>
+                            <th>Subtotal</th>
+                            <th class="text-right pr-6">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="p-t" class="divide-y text-[var(--brand-dark)] uppercase font-semibold"></tbody>
+                </table>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded-2xl border-2 border-slate-200 shadow-sm items-end">
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-[var(--brand-dark)]">Proveedor a imputar</label>
+                        <select id="p-prov" class="w-full bg-slate-50 border-slate-300 font-bold"></select>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3 w-full items-end">
+                        <div class="flex-1 w-full">
+                            <label class="text-[var(--brand-dark)]">Medio de Pago</label>
+                            <select id="p-pago" onchange="toggleDetallePagoCompra()" class="w-full bg-slate-50 border-slate-300 font-bold h-[42px]">
+                                <option value="EFECTIVO">EFECTIVO</option>
+                                <option value="TRANSFERENCIA">TRANSFERENCIA</option>
+                                <option value="TARJETA">TARJETA</option>
+                                <option value="CTA CTE PROVEEDOR">CUENTA CORRIENTE (FIADO)</option>
+                            </select>
+                        </div>
+                        <div id="container-detalle-pago-compra" class="hidden flex-1 w-full">
+                            <label class="text-[var(--brand-dark)]">Subcuenta / Detalle</label>
+                            <select id="p-pago-detalle" class="w-full bg-slate-50 border-slate-300 font-bold h-[42px]"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col justify-between items-end h-full">
+                    <div class="text-right w-full mb-4">
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Total Compra</p>
+                        <div class="h-title text-5xl text-[var(--brand-accent)]">$<span id="p-tot">0</span></div>
+                    </div>
+                    <button onclick="finalizarCompra()" class="btn-brand bg-slate-800 hover:bg-black px-10 py-0 h-[46px] w-full shadow-lg">Finalizar Compra e Ingresar Stock</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="c" class="seccion space-y-4">
-        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-black text-emerald-600 uppercase italic">Clientes</h2>
-                <button onclick="exportarExcel('clientes')" class="btn-excel">📥 Descargar Clientes</button>
+    <div id="s" class="seccion space-y-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div class="lg:col-span-3 space-y-8">
+                <div class="card-solid border-t-4 border-[var(--brand-main)]">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="h-title text-2xl text-[var(--brand-dark)]">Control de Stock</h2>
+                        
+                        <div class="flex gap-2">
+                            <input type="file" id="s-import-file" class="hidden" accept=".xlsx, .xls" onchange="importarExcelStock(this)">
+                            <button onclick="document.getElementById('s-import-file').click()" class="btn-excel text-[var(--brand-main)] border-[var(--brand-main)]">📂 Importar Excel</button>
+                            <button onclick="exportarExcel('stock')" class="btn-excel">📥 Descargar Stock</button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                        <input type="hidden" id="s-key">
+                        <div class="md:col-span-1"><label>Código</label><input type="text" id="s-cod" class="w-full text-center uppercase bg-white"></div>
+                        <div class="md:col-span-2"><label>Nombre Prenda</label><input type="text" id="s-nom" class="w-full bg-white"></div>
+                        <div><label>Marca</label><input type="text" id="s-mar" class="w-full bg-white"></div>
+                        <div><label>Talle</label><input type="text" id="s-tal" class="w-full bg-white"></div>
+                        <div><label>Color</label><input type="text" id="s-col" class="w-full bg-white"></div>
+                        <div><label>Cant.</label><input type="number" id="s-can" class="w-full bg-white"></div>
+                        <div><label>Costo</label><input type="number" id="s-cos" oninput="calcularPrecioDesdeMargen()" class="w-full bg-white"></div>
+                        <div><label class="text-[var(--brand-main)]">% Ganancia</label><input type="number" id="s-margen" oninput="calcularPrecioDesdeMargen()" class="w-full bg-white border-[var(--brand-main)]"></div>
+                        <div><label class="text-[var(--brand-main)]">Precio Venta</label><input type="number" id="s-pre" oninput="calcularMargenDesdePrecio()" class="w-full border-[var(--brand-main)] text-[var(--brand-main)] bg-white font-bold"></div>
+                        <button onclick="pushStock()" class="lg:col-span-5 bg-[var(--brand-dark)] hover:bg-[#1a232a] text-white font-bold rounded-xl py-3 uppercase text-xs transition-all mt-2 shadow-sm">Guardar Producto</button>
+                    </div>
+
+                    <div class="mb-4">
+                        <label>Buscar en Inventario</label>
+                        <input type="text" id="s-search" oninput="renderStock()" placeholder="Escribe nombre o escanea código..." class="w-full border-slate-300">
+                    </div>
+
+                    <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                        <table class="w-full text-left text-sm table-custom bg-white">
+                            <thead>
+                                <tr>
+                                    <th class="pl-4">Cod.</th>
+                                    <th>Producto</th>
+                                    <th>Marca</th>
+                                    <th class="text-center">Cant.</th>
+                                    <th>Costo</th>
+                                    <th class="text-[var(--brand-main)]">% Gan.</th>
+                                    <th>Venta</th>
+                                    <th class="text-right pr-4">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="s-t" class="divide-y uppercase text-[var(--brand-dark)] font-semibold"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
-                <input type="hidden" id="c-key"><input type="text" id="c-nom" placeholder="NOMBRE" class="p-3 border rounded-xl uppercase text-xs">
-                <input type="text" id="c-dni" placeholder="DNI" class="p-3 border rounded-xl text-xs"><input type="text" id="c-cel" placeholder="CEL" class="p-3 border rounded-xl text-xs">
-                <input type="text" id="c-dir" placeholder="DIR" class="p-3 border rounded-xl text-xs">
-                <select id="c-rec" class="p-3 border rounded-xl text-xs font-bold"><option value="NO">SIN RECIBO</option><option value="SI">CON RECIBO</option></select>
-                <button onclick="pushCli()" class="lg:col-span-5 bg-emerald-500 text-white font-black rounded-xl py-3 uppercase">Registrar</button>
+            <div class="lg:col-span-1">
+                <div class="card-solid border-2 border-[var(--brand-accent-light)] bg-rose-50 sticky top-24">
+                    <h2 class="h-title text-lg text-[var(--brand-accent)] mb-2">Stock Crítico ⚠️</h2>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-4 tracking-widest">Reponer urgente (3 o menos)</p>
+                    <div id="s-alertas-lista" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2"></div>
+                </div>
             </div>
-            <input type="text" id="c-search" oninput="renderClientes()" placeholder="🔍 Buscar cliente..." class="w-full p-4 bg-slate-50 border rounded-2xl mb-6 outline-none">
-            <div id="c-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </div>
     </div>
 
-    <div id="x" class="seccion space-y-4">
-        <div class="flex justify-between items-center">
-             <h2 class="text-xl font-black text-slate-800 uppercase italic">Movimientos de Caja</h2>
-             <button onclick="exportarExcel('caja')" class="btn-excel py-3 px-6">📥 Exportar Reporte de Caja</button>
-        </div>
-        <div id="resumen-caja" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-        <div class="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <input type="date" id="x-filtro-fecha" onchange="renderCaja()" class="p-3 bg-slate-50 rounded-xl border text-xs font-bold">
-                <select id="x-filtro-tipo" onchange="renderCaja()" class="p-3 bg-slate-50 rounded-xl border text-xs font-bold"><option value="TODOS">TODOS</option><option value="ING">INGRESOS</option><option value="EGR">EGRESOS</option></select>
-                <select id="x-filtro-medio" onchange="renderCaja()" class="p-3 bg-slate-50 rounded-xl border text-xs font-bold"><option value="TODOS">TODOS LOS MEDIOS</option><option value="EFECTIVO">EFECTIVO</option><option value="TRANSFERENCIA">TRANSFERENCIA</option><option value="TARJETA">TARJETA</option></select>
-                <input type="text" id="x-filtro-texto" oninput="renderCaja()" placeholder="Buscar..." class="p-3 bg-slate-50 rounded-xl border text-xs font-bold">
+    <div id="c" class="seccion space-y-8">
+        <div class="card-solid border-t-4 border-[var(--brand-main)]">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="h-title text-2xl text-[var(--brand-dark)]">Gestión de Clientes</h2>
+                
+                <div class="flex gap-2">
+                    <input type="file" id="c-import-file" class="hidden" accept=".xlsx, .xls" onchange="importarExcelClientes(this)">
+                    <button onclick="document.getElementById('c-import-file').click()" class="btn-excel text-[var(--brand-main)] border-[var(--brand-main)]">📂 Importar Excel</button>
+                    <button onclick="exportarExcel('clientes')" class="btn-excel">📥 Descargar Clientes</button>
+                </div>
             </div>
-            <div class="overflow-x-auto"><table class="w-full text-[10px] text-left font-bold uppercase"><thead class="text-[9px] text-slate-400 border-b"><tr><th>Fecha</th><th>Cliente</th><th>Concepto</th><th>Medio</th><th class="text-right">Monto</th><th class="text-right">Acción</th></tr></thead><tbody id="x-t" class="divide-y"></tbody></table></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-6 bg-[var(--brand-light)] p-5 rounded-2xl border border-[var(--brand-main)]">
+                <input type="hidden" id="c-key">
+                <div class="lg:col-span-2"><label class="text-[var(--brand-main)]">Nombre Completo</label><input type="text" id="c-nom" class="w-full uppercase border-[var(--brand-main)] bg-white"></div>
+                <div><label class="text-[var(--brand-main)]">DNI</label><input type="text" id="c-dni" class="w-full border-[var(--brand-main)] bg-white"></div>
+                <div><label class="text-[var(--brand-main)]">Celular</label><input type="text" id="c-cel" class="w-full border-[var(--brand-main)] bg-white"></div>
+                <div><label class="text-[var(--brand-main)]">Dirección</label><input type="text" id="c-dir" class="w-full border-[var(--brand-main)] bg-white"></div>
+                <div><label class="text-[var(--brand-main)]">Facturación</label><select id="c-rec" class="w-full border-[var(--brand-main)] bg-white"><option value="NO">SIN RECIBO</option><option value="SI">CON RECIBO</option></select></div>
+                <button onclick="pushCli()" class="btn-brand lg:col-span-6 py-3 mt-2 text-xs">Registrar Cliente</button>
+            </div>
+            <div class="mb-6">
+                <label>Buscador de Clientes</label>
+                <input type="text" id="c-search" oninput="renderClientes()" placeholder="Busca por nombre o DNI..." class="w-full">
+            </div>
+            <div id="c-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
         </div>
     </div>
+
+    <div id="x" class="seccion space-y-8">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+             <h2 class="h-title text-2xl text-[var(--brand-dark)]">Caja Diaria</h2>
+             <button onclick="exportarExcel('caja')" class="btn-excel py-3 px-6 text-xs">📥 Descargar Reporte</button>
+        </div>
+        
+        <div id="resumen-caja" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+        
+        <div class="card-solid border-2 border-[var(--brand-accent)] border-dashed bg-rose-50">
+            <h3 class="text-xs font-bold text-[var(--brand-accent)] uppercase tracking-widest mb-4">Registrar Egreso Manual (Gastos Extras)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
+                <div class="md:col-span-3"><label class="text-[var(--brand-accent)]">Concepto del Gasto</label><input type="text" id="x-egr-concepto" class="w-full uppercase bg-white border-[var(--brand-accent-light)]"></div>
+                <div><label class="text-[var(--brand-accent)]">Monto $</label><input type="number" id="x-egr-monto" class="w-full font-bold text-[var(--brand-accent)] bg-white border-[var(--brand-accent)]"></div>
+                <div><label class="text-[var(--brand-accent)]">Medio Pago</label><select id="x-egr-medio" class="w-full text-xs font-bold bg-white border-[var(--brand-accent-light)]"></select></div>
+                <button onclick="pushEgreso()" class="bg-[var(--brand-accent)] hover:bg-[#e63c65] text-white font-bold rounded-xl py-3 mt-2 text-xs uppercase transition-all shadow-sm">Registrar Gasto</button>
+            </div>
+        </div>
+
+        <div class="card-solid">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div><label>Fecha</label><input type="date" id="x-filtro-fecha" onchange="renderCaja()" class="w-full bg-white"></div>
+                <div><label>Movimiento</label><select id="x-filtro-tipo" onchange="renderCaja()" class="w-full bg-white"><option value="TODOS">TODOS LOS TIPOS</option><option value="ING">INGRESOS</option><option value="EGR">EGRESOS</option></select></div>
+                <div><label>Medio</label><select id="x-filtro-medio" onchange="renderCaja()" class="w-full bg-white"><option value="TODOS">TODOS LOS MEDIOS</option><option value="EFECTIVO">EFECTIVO</option><option value="TRANSFERENCIA">TRANSFERENCIA</option><option value="TARJETA">TARJETA</option></select></div>
+                <div><label>Buscar</label><input type="text" id="x-filtro-texto" oninput="renderCaja()" placeholder="Cliente o concepto..." class="w-full bg-white"></div>
+            </div>
+            <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                <table class="w-full text-sm text-left table-custom">
+                    <thead>
+                        <tr>
+                            <th class="pl-4">Fecha / Hora</th>
+                            <th>Involucrado</th>
+                            <th>Concepto</th>
+                            <th>Medio</th>
+                            <th class="text-right">Monto</th>
+                            <th class="text-right pr-4">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="x-t" class="divide-y text-[var(--brand-dark)] font-medium bg-white"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="a" class="seccion space-y-8">
+        <div class="card-solid border-none shadow-lg !p-0 overflow-hidden">
+            
+            <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center p-6 bg-[var(--brand-light)] border-b border-[var(--brand-main)] gap-6">
+                <h2 class="h-title text-2xl text-[var(--brand-dark)]">Libro Mayor Detallado</h2>
+                
+                <div class="flex flex-wrap gap-4 w-full xl:w-auto bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="flex-1 min-w-[150px]">
+                        <label class="text-[var(--brand-main)]">Categoría</label>
+                        <select id="a-filtro-tipo-cuenta" onchange="actualizarSubcuentasBalance()" class="w-full text-xs font-bold border-[var(--brand-main)] bg-white text-[var(--brand-dark)]">
+                            <option value="GENERAL">Cuentas Generales</option>
+                            <option value="BILLETERAS">Billeteras / Bancos</option>
+                            <option value="TARJETAS">Tarjetas</option>
+                            <option value="CLIENTES">Por Cliente (Cta. Cte.)</option>
+                            <option value="PROVEEDORES">Por Proveedor (Deudas)</option>
+                        </select>
+                    </div>
+                    <div class="flex-1 min-w-[150px]">
+                        <label class="text-[var(--brand-dark)]">Subcuenta Específica</label>
+                        <select id="a-filtro-subcuenta" onchange="renderArqueo()" class="w-full text-xs font-bold border-slate-300 bg-white text-slate-700">
+                        </select>
+                    </div>
+
+                    <div class="flex-1 min-w-[120px]">
+                        <label class="text-slate-500">Desde</label>
+                        <input type="date" id="a-fecha-desde" onchange="renderArqueo()" class="w-full text-xs border-slate-300 bg-white">
+                    </div>
+                    <div class="flex-1 min-w-[120px]">
+                        <label class="text-slate-500">Hasta</label>
+                        <input type="date" id="a-fecha-hasta" onchange="renderArqueo()" class="w-full text-xs border-slate-300 bg-white">
+                    </div>
+                    <div class="flex items-end">
+                        <button onclick="exportarExcel('mayor')" class="btn-brand bg-[var(--brand-dark)] text-white px-5 py-2.5 text-[10px] shadow-sm hover:bg-black">📥 Exportar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto bg-white">
+                <table class="w-full text-right table-mayor text-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-left font-bold pl-6">Fecha</th>
+                            <th class="text-left font-bold">Asiento</th>
+                            <th class="text-left font-bold">Cliente/Prov</th>
+                            <th class="text-left font-bold">Concepto</th>
+                            <th class="text-left font-bold">Medio</th>
+                            <th class="font-bold">Ingresos (Debe)</th>
+                            <th class="font-bold">Egresos (Haber)</th>
+                            <th class="text-white font-bold pr-6">Saldo Final</th>
+                        </tr>
+                    </thead>
+                    <tbody id="a-mayor-tabla" class="text-[var(--brand-dark)] font-semibold divide-y border-b border-slate-100"></tbody>
+                    <tfoot id="a-mayor-total" class="h-title text-lg text-[var(--brand-dark)] bg-slate-50"></tfoot>
+                </table>
+            </div>
+            <div class="bg-slate-50 p-6 border-t border-slate-200">
+                 <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 text-center">Resumen del Período Seleccionado</h3>
+                 <div id="a-resumen-global" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="j" class="seccion space-y-8">
+        <div class="card-solid border-t-4 border-[var(--brand-dark)]">
+            <h2 class="h-title text-2xl text-[var(--brand-dark)] mb-6">Configuración de Cuentas y Seguridad</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="p-6 border border-slate-200 bg-slate-50 rounded-2xl">
+                    <h3 class="text-xs font-bold text-[var(--brand-main)] uppercase tracking-widest mb-4">📱 Billeteras / Bancos</h3>
+                    <div class="flex gap-3 mb-6">
+                        <input type="text" id="nueva-billetera" placeholder="EJ. MODO, NARANJA X" class="flex-1 uppercase text-sm bg-white">
+                        <button onclick="agregarMedio('transferencia')" class="btn-brand px-5 py-2 text-xl">+</button>
+                    </div>
+                    <ul id="lista-billeteras" class="space-y-2 max-h-60 overflow-y-auto pr-2 text-xs font-semibold uppercase text-[var(--brand-dark)]"></ul>
+                </div>
+
+                <div class="p-6 border border-slate-200 bg-slate-50 rounded-2xl">
+                    <h3 class="text-xs font-bold text-[var(--brand-main)] uppercase tracking-widest mb-4">💳 Tarjetas / Posnet</h3>
+                    <div class="flex gap-3 mb-6">
+                        <input type="text" id="nueva-tarjeta" placeholder="EJ. VISA DÉBITO" class="flex-1 uppercase text-sm bg-white">
+                        <button onclick="agregarMedio('tarjeta')" class="btn-brand px-5 py-2 text-xl">+</button>
+                    </div>
+                    <ul id="lista-tarjetas" class="space-y-2 max-h-60 overflow-y-auto pr-2 text-xs font-semibold uppercase text-[var(--brand-dark)]"></ul>
+                </div>
+            </div>
+
+            <div class="p-6 border border-[var(--brand-main)] bg-[var(--brand-light)] rounded-2xl text-center shadow-sm">
+                <h3 class="text-sm font-black text-[var(--brand-main)] uppercase tracking-widest mb-2">Respaldo de Base de Datos</h3>
+                <p class="text-xs text-slate-600 mb-4">Descarga una copia completa de toda tu información para mantenerla segura ante cualquier eventualidad.</p>
+                <button onclick="descargarBackup()" class="btn-brand bg-[var(--brand-dark)] hover:bg-black px-8 py-3 text-xs shadow-md">💾 Descargar Backup Completo</button>
+            </div>
+        </div>
+    </div>
+
 </main>
 
-<div id="modal-cliente" class="fixed inset-0 bg-black/70 hidden z-[100] flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl">
-        <div class="p-6 border-b bg-slate-50 relative">
-            <h2 id="ficha-nom" class="text-2xl font-black uppercase italic"></h2>
-            <div id="ficha-datos" class="flex flex-wrap gap-4 mt-2 text-[10px] font-bold text-slate-500 uppercase"></div>
-            <button onclick="cerrarFicha()" class="absolute top-4 right-4 text-2xl font-bold">&times;</button>
+<div id="modal-cliente" class="fixed inset-0 bg-slate-900/80 hidden z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-5xl rounded-2xl overflow-hidden shadow-2xl border border-[var(--brand-main)]">
+        <div class="p-6 bg-[var(--brand-dark)] border-b border-[var(--brand-main)] flex justify-between items-center">
+            <div>
+                <h2 id="ficha-nom" class="h-title text-2xl text-white"></h2>
+                <div id="ficha-datos" class="flex flex-wrap gap-4 mt-2 text-[10px] font-bold text-[var(--brand-main)] uppercase tracking-widest"></div>
+            </div>
+            <button onclick="cerrarFicha()" class="text-4xl font-light text-slate-400 hover:text-[var(--brand-accent)] transition-colors">&times;</button>
         </div>
-        <div class="p-6 space-y-4">
-            <div class="bg-white p-4 rounded-2xl border-2 border-slate-100 flex items-center justify-between">
-                <div><p class="text-[9px] font-bold text-slate-400 uppercase">Saldo Total Deudor</p><p id="ficha-saldo" class="text-3xl font-black text-rose-600"></p></div>
-                <button onclick="cobrarFicha()" class="bg-emerald-600 text-white px-6 py-3 rounded-xl font-black uppercase text-[11px]">Registrar Pago</button>
+        <div class="p-6 space-y-6 bg-slate-50">
+            
+            <div class="bg-white p-6 rounded-2xl border border-[var(--brand-main)] flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Deuda Total Pendiente</p>
+                    <p id="ficha-saldo" class="h-title text-5xl text-[var(--brand-accent)] tracking-tighter"></p>
+                </div>
+                <div class="flex flex-wrap gap-4 w-full md:w-auto justify-end bg-[var(--brand-light)] p-5 rounded-xl border border-[var(--brand-main)] shadow-sm items-end">
+                    <div class="w-full sm:w-32">
+                        <label class="text-[var(--brand-dark)] pl-1 whitespace-nowrap">Monto $</label>
+                        <input type="number" id="ficha-cobro-monto" class="w-full text-sm font-bold text-[var(--brand-accent)] border-none shadow-sm bg-white h-[42px]">
+                    </div>
+                    
+                    <div class="w-full sm:w-36">
+                        <label class="text-[var(--brand-dark)] pl-1 whitespace-nowrap">Categoría</label>
+                        <select id="ficha-cobro-medio" onchange="toggleDetalleCobroFicha()" class="w-full text-xs font-bold border-none shadow-sm text-[var(--brand-dark)] bg-white h-[42px]">
+                            <option value="EFECTIVO">EFECTIVO</option>
+                            <option value="TRANSFERENCIA">TRANSFERENCIA</option>
+                            <option value="TARJETA">TARJETA</option>
+                        </select>
+                    </div>
+                    
+                    <div id="container-detalle-cobro-ficha" class="hidden w-full sm:w-36">
+                        <label class="text-[var(--brand-dark)] pl-1 whitespace-nowrap">Subcuenta / Detalle</label>
+                        <select id="ficha-cobro-detalle" class="w-full text-xs font-bold border-none shadow-sm bg-white h-[42px]"></select>
+                    </div>
+                    
+                    <button onclick="cobrarFicha()" class="btn-brand px-8 py-0 h-[42px] text-xs shadow-md">Registrar Cobro</button>
+                </div>
             </div>
-            <button onclick="deudaManual()" class="w-full bg-slate-900 text-white py-3 rounded-2xl font-black uppercase text-[10px] hover:bg-rose-600 transition-all">+ Cargar Deuda Manual</button>
-            <div class="space-y-2">
-                <h4 class="text-[10px] font-black text-slate-400 uppercase">Estado de Deudas Individuales (Vencimiento 30 días)</h4>
-                <div id="lista-deudas-individuales" class="grid grid-cols-1 gap-2 max-h-40 overflow-y-auto"></div>
-            </div>
-            <div class="max-h-40 overflow-y-auto border-t pt-4">
-                <h4 class="text-[10px] font-black text-slate-400 uppercase mb-2">Historial Completo</h4>
-                <table class="w-full text-[10px] font-bold uppercase">
-                    <thead class="text-[9px] text-slate-300 border-b"><tr><th class="text-left pb-2">Fecha</th><th class="text-left pb-2">Concepto</th><th class="text-right pb-2">Monto</th></tr></thead>
-                    <tbody id="ficha-movimientos" class="divide-y"></tbody>
-                </table>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="space-y-3">
+                    <h4 class="text-xs font-bold text-[var(--brand-dark)] uppercase tracking-widest pl-1">Estado de Cuentas (30 días)</h4>
+                    <div id="lista-deudas-individuales" class="grid grid-cols-1 gap-3 max-h-[220px] overflow-y-auto pr-2"></div>
+                    <button onclick="deudaManual()" class="w-full bg-[var(--brand-dark)] hover:bg-black text-white py-3 rounded-xl font-bold uppercase text-[10px] transition-all shadow-sm">Agregar Deuda Manual</button>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1">Historial de Movimientos</h4>
+                    <div class="max-h-[280px] overflow-y-auto bg-white p-3 rounded-xl border border-slate-200">
+                        <table class="w-full text-xs table-custom !border-none">
+                            <thead class="!bg-white !text-slate-400"><tr><th class="pl-2">Fecha</th><th>Detalle</th><th class="text-right pr-2">Monto</th></tr></thead>
+                            <tbody id="ficha-movimientos" class="divide-y divide-slate-100 text-[var(--brand-dark)] font-medium"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+<div id="modal-proveedor" class="fixed inset-0 bg-slate-900/80 hidden z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-5xl rounded-2xl overflow-hidden shadow-2xl border border-indigo-500">
+        <div class="p-6 bg-[var(--brand-dark)] border-b border-indigo-500 flex justify-between items-center">
+            <div>
+                <h2 id="ficha-prov-nom" class="h-title text-2xl text-white"></h2>
+                <div id="ficha-prov-datos" class="flex flex-wrap gap-4 mt-2 text-[10px] font-bold text-indigo-400 uppercase tracking-widest"></div>
+            </div>
+            <button onclick="cerrarFichaProv()" class="text-4xl font-light text-slate-400 hover:text-indigo-400 transition-colors">&times;</button>
+        </div>
+        <div class="p-6 space-y-6 bg-slate-50">
+            
+            <div class="bg-white p-6 rounded-2xl border border-indigo-200 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Saldo Deudor (Nosotros debemos)</p>
+                    <p id="ficha-prov-saldo" class="h-title text-5xl text-indigo-600 tracking-tighter"></p>
+                </div>
+                <div class="flex flex-wrap gap-4 w-full md:w-auto justify-end bg-indigo-50 p-5 rounded-xl border border-indigo-200 shadow-sm items-end">
+                    <div class="w-full sm:w-32">
+                        <label class="text-indigo-800 pl-1 whitespace-nowrap">Monto a Entregar $</label>
+                        <input type="number" id="ficha-prov-pago-monto" class="w-full text-sm font-bold text-indigo-600 border-none shadow-sm bg-white h-[42px]">
+                    </div>
+                    
+                    <div class="w-full sm:w-36">
+                        <label class="text-indigo-800 pl-1 whitespace-nowrap">Categoría</label>
+                        <select id="ficha-prov-pago-medio" onchange="toggleDetallePagoProvFicha()" class="w-full text-xs font-bold border-none shadow-sm text-indigo-900 bg-white h-[42px]">
+                            <option value="EFECTIVO">EFECTIVO</option>
+                            <option value="TRANSFERENCIA">TRANSFERENCIA</option>
+                            <option value="TARJETA">TARJETA</option>
+                        </select>
+                    </div>
+                    
+                    <div id="container-detalle-pago-prov" class="hidden w-full sm:w-36">
+                        <label class="text-indigo-800 pl-1 whitespace-nowrap">Subcuenta / Detalle</label>
+                        <select id="ficha-prov-pago-detalle" class="w-full text-xs font-bold border-none shadow-sm bg-white h-[42px]"></select>
+                    </div>
+                    
+                    <button onclick="pagarFichaProv()" class="btn-brand bg-indigo-600 hover:bg-indigo-700 px-8 py-0 h-[42px] text-xs shadow-md">Registrar Entrega</button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="space-y-3">
+                    <h4 class="text-xs font-bold text-[var(--brand-dark)] uppercase tracking-widest pl-1">Compras Adeudadas</h4>
+                    <div id="lista-deudas-prov" class="grid grid-cols-1 gap-3 max-h-[220px] overflow-y-auto pr-2"></div>
+                    <button onclick="deudaManualProv()" class="w-full bg-[var(--brand-dark)] hover:bg-black text-white py-3 rounded-xl font-bold uppercase text-[10px] transition-all shadow-sm">Ingresar Saldo Deudor Manual</button>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1">Historial de Compras/Pagos</h4>
+                    <div class="max-h-[280px] overflow-y-auto bg-white p-3 rounded-xl border border-slate-200">
+                        <table class="w-full text-xs table-custom !border-none">
+                            <thead class="!bg-white !text-slate-400"><tr><th class="pl-2">Fecha</th><th>Detalle</th><th class="text-right pr-2">Monto</th></tr></thead>
+                            <tbody id="ficha-movimientos-prov" class="divide-y divide-slate-100 text-[var(--brand-dark)] font-medium"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ticket-print" class="hidden"></div>
+
 <script>
     const DB_URL = "https://sofia-sistema-default-rtdb.firebaseio.com/";
-    let db = { stock: {}, clientes: {}, caja: {} };
+    const STOCK_PASS = "427936";
+    let db = { stock: {}, clientes: {}, caja: {}, medios: { transferencia: ["MERCADO PAGO", "UALA", "BRUBANK"], tarjeta: ["DEBITO", "CREDITO"] }, proveedores: {} };
     let carro = [];
+    let carroCompra = [];
     let clienteActualKey = null;
+    let proveedorActualKey = null; 
 
-    async function syncDB(path, data) { 
-        await fetch(DB_URL + path + ".json", { method: 'PUT', body: JSON.stringify(data) }); 
-        loadDB();
-    }
-
-    async function loadDB() { 
-        try { 
-            const res = await fetch(DB_URL + ".json");
-            const data = await res.json(); 
-            if(data) { 
-                db.stock = data.stock || {}; 
-                db.clientes = data.clientes || {};
-                db.caja = data.caja || {}; 
-                render(); 
-                if(clienteActualKey) verFicha(clienteActualKey); 
-            } 
-        } catch (e) {} 
-    }
+    async function syncDB(path, data) { try { await fetch(DB_URL + path + ".json", { method: 'PUT', body: JSON.stringify(data) }); loadDB(); } catch(e) { alert("Error de sincronización."); } }
+    async function loadDB() { try { const res = await fetch(DB_URL + ".json"); const data = await res.json(); if(data) { db.stock = data.stock || {}; db.clientes = data.clientes || {}; db.caja = data.caja || {}; db.medios = data.medios || db.medios; db.proveedores = data.proveedores || {}; render(); if(clienteActualKey) verFicha(clienteActualKey); if(proveedorActualKey) verFichaProv(proveedorActualKey); } else { render(); } } catch (e) { } }
     
     function render() { 
-        renderVUI();
+        renderVUI(); 
         renderStock(); 
         renderClientes(); 
+        renderProveedores();
         renderCaja(); 
+        actualizarSubcuentasBalance(); 
+        renderMedios(); 
         renderV(); 
+        renderPCarro();
         renderVentasHoy(); 
     }
-
-    function calcularPrecioDesdeMargen() {
-        const c = parseFloat(document.getElementById('s-cos').value) || 0;
-        const m = parseFloat(document.getElementById('s-margen').value) || 0;
-        if(c > 0 && m > 0) document.getElementById('s-pre').value = Math.round(c * (1 + (m / 100)));
-    }
-
-    function calcularMargenDesdePrecio() {
-        const c = parseFloat(document.getElementById('s-cos').value) || 0;
-        const v = parseFloat(document.getElementById('s-pre').value) || 0;
-        if(c > 0 && v > 0) document.getElementById('s-margen').value = Math.round(((v - c) / c) * 100);
-    }
-
-    async function pushStock() {
-        const k = document.getElementById('s-key').value || "S" + Date.now();
-        db.stock[k] = { 
-            cod: document.getElementById('s-cod').value.toUpperCase(), 
-            nom: document.getElementById('s-nom').value.toUpperCase(), 
-            mar: document.getElementById('s-mar').value.toUpperCase(), 
-            tal: document.getElementById('s-tal').value.toUpperCase(), 
-            col: document.getElementById('s-col').value.toUpperCase(), 
-            can: parseInt(document.getElementById('s-can').value) || 0, 
-            cos: parseFloat(document.getElementById('s-cos').value) || 0, 
-            pre: parseFloat(document.getElementById('s-pre').value) || 0 
+    
+    // IMPORTACIÓN MASIVA EXCEL EN STOCK
+    async function importarExcelStock(input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0]; const reader = new FileReader();
+        reader.onload = async function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet);
+            
+            if (jsonData.length === 0) { alert("El archivo está vacío."); return; }
+            
+            const pass = prompt("Ingrese contraseña para importar stock:");
+            if (pass !== STOCK_PASS) { alert("Incorrecta."); input.value = ""; return; }
+            
+            if (confirm(`¿Importar o actualizar ${jsonData.length} productos en el inventario?`)) {
+                jsonData.forEach(row => {
+                    let cod = String(row["CODIGO"] || row["Código"] || row["codigo"] || "").trim().toUpperCase();
+                    let nom = String(row["PRENDA"] || row["Prenda"] || row["prenda"] || "").trim().toUpperCase();
+                    if (!cod || !nom) return; 
+                    
+                    let mar = String(row["MARCA"] || row["Marca"] || "").trim().toUpperCase();
+                    let tal = String(row["TALLE"] || row["Talle"] || "").trim().toUpperCase();
+                    let col = String(row["COLOR"] || row["Color"] || "").trim().toUpperCase();
+                    let can = parseInt(row["CANTIDAD"] || row["Cantidad"]) || 0;
+                    let cos = parseFloat(row["COSTO"] || row["Costo"]) || 0;
+                    let pre = parseFloat(row["PRECIO VENTA"] || row["Precio Venta"] || row["PRECIO_VENTA"] || row["Venta"]) || 0;
+                    
+                    let k = Object.keys(db.stock).find(key => db.stock[key].cod === cod);
+                    if (!k) k = "S" + Date.now() + Math.floor(Math.random() * 10000); 
+                    db.stock[k] = { cod, nom, mar, tal, col, can, cos, pre };
+                });
+                await syncDB("stock", db.stock); alert("¡Importación completada con éxito!");
+            }
+            input.value = ""; 
         };
-        await syncDB("stock", db.stock); 
-        document.getElementById('s-key').value = ""; 
-        document.getElementById('s-margen').value = ""; 
-        limpiarInputs('s');
+        reader.readAsArrayBuffer(file);
     }
 
+    // IMPORTACIÓN MASIVA EXCEL CLIENTES (NUEVA FUNCIÓN REQUERIDA)
+    async function importarExcelClientes(input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0]; 
+        const reader = new FileReader();
+        
+        reader.onload = async function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet);
+            
+            if (jsonData.length === 0) { alert("El archivo está vacío."); return; }
+            
+            const pass = prompt("Ingrese contraseña para importar clientes:");
+            if (pass !== STOCK_PASS) { alert("Incorrecta."); input.value = ""; return; }
+            
+            if (confirm(`¿Importar o actualizar ${jsonData.length} clientes en el sistema?`)) {
+                jsonData.forEach(row => {
+                    let nom = String(row["NOMBRE"] || row["Nombre"] || "").trim().toUpperCase();
+                    if (!nom) return; 
+                    
+                    let dni = String(row["DNI"] || row["Dni"] || row["DOCUMENTO"] || "").trim();
+                    let cel = String(row["CELULAR"] || row["Celular"] || row["TELEFONO"] || "").trim();
+                    let dir = String(row["DIRECCION"] || row["Dirección"] || "").trim().toUpperCase();
+                    let rec = String(row["FACTURACION"] || row["Facturación"] || row["RECIBO"] || "NO").trim().toUpperCase();
+                    if (rec !== "SI") rec = "NO";
+                    let saldo = parseFloat(row["SALDO"] || row["Saldo"] || 0) || 0;
+                    
+                    // Busca si el cliente existe por nombre O por DNI
+                    let k = Object.keys(db.clientes).find(key => db.clientes[key].nom === nom || (dni && db.clientes[key].dni === dni));
+                    if (!k) k = "L" + Date.now() + Math.floor(Math.random() * 10000); 
+                    
+                    db.clientes[k] = {
+                        nom: nom,
+                        dni: dni,
+                        cel: cel,
+                        dir: dir,
+                        rec: rec,
+                        saldo: db.clientes[k] ? (db.clientes[k].saldo || 0) : saldo,
+                        deudas: db.clientes[k] ? (db.clientes[k].deudas || []) : []
+                    };
+                });
+                await syncDB("clientes", db.clientes); 
+                alert("¡Importación de clientes completada!");
+            }
+            input.value = ""; 
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    // STOCK
+    function calcularPrecioDesdeMargen() { const c = parseFloat(document.getElementById('s-cos').value) || 0; const m = parseFloat(document.getElementById('s-margen').value) || 0; if(c > 0 && m > 0) document.getElementById('s-pre').value = Math.round(c * (1 + (m / 100))); }
+    function calcularMargenDesdePrecio() { const c = parseFloat(document.getElementById('s-cos').value) || 0; const v = parseFloat(document.getElementById('s-pre').value) || 0; if(c > 0 && v > 0) document.getElementById('s-margen').value = Math.round(((v - c) / c) * 100); }
+    async function pushStock() { const pass = prompt("Contraseña:"); if (pass !== STOCK_PASS) return; const k = document.getElementById('s-key').value || "S" + Date.now(); db.stock[k] = { cod: document.getElementById('s-cod').value.toUpperCase(), nom: document.getElementById('s-nom').value.toUpperCase(), mar: document.getElementById('s-mar').value.toUpperCase(), tal: document.getElementById('s-tal').value.toUpperCase(), col: document.getElementById('s-col').value.toUpperCase(), can: parseInt(document.getElementById('s-can').value) || 0, cos: parseFloat(document.getElementById('s-cos').value) || 0, pre: parseFloat(document.getElementById('s-pre').value) || 0 }; await syncDB("stock", db.stock); document.getElementById('s-key').value = ""; document.getElementById('s-margen').value = ""; limpiarInputs('s'); }
     function renderStock() {
-        const bus = document.getElementById('s-search').value.toLowerCase();
-        document.getElementById('s-t').innerHTML = Object.entries(db.stock).filter(([k,s]) => s.nom.toLowerCase().includes(bus) || s.cod.toLowerCase().includes(bus)).map(([k,s]) => {
-            const gan = s.cos > 0 ? Math.round(((s.pre - s.cos)/s.cos)*100) : 0;
-            return `<tr class="border-b uppercase"><td class="p-3 text-rose-500 font-mono">${s.cod}</td><td class="p-3">${s.nom}</td><td class="p-3 text-slate-400 text-[10px]">${s.mar}</td><td class="p-3 text-center">${s.can}</td><td class="p-3 text-slate-400">$${s.cos}</td><td class="p-3 text-emerald-500 font-black">${gan}%</td><td class="p-3 text-slate-900 font-black">$${s.pre}</td><td class="p-3 text-right flex justify-end gap-2"><button onclick="editarStock('${k}')">✏️</button><button onclick="elimStock('${k}')">✕</button></td></tr>`;
-        }).join('');
+        const bus = document.getElementById('s-search').value.toLowerCase(); let htmlTabla = ""; let htmlAlertas = "";
+        Object.entries(db.stock).forEach(([k, s]) => {
+            const gan = s.cos > 0 ? Math.round(((s.pre - s.cos)/s.cos)*100) : 0; const esBajo = s.can <= 3;
+            if(esBajo) { htmlAlertas += `<div class="bg-white p-4 rounded-xl shadow-sm border border-[var(--brand-accent-light)] flex justify-between items-center"><div><p class="text-xs font-bold text-[var(--brand-dark)] uppercase">${s.nom||''}</p><p class="text-[9px] font-bold text-slate-500 font-mono">${s.cod||''} | T: ${s.tal||''}</p></div><div class="bg-[var(--brand-accent)] text-white px-3 py-1 rounded-md font-bold text-sm">${s.can||0}</div></div>`; }
+            if((s.nom||'').toLowerCase().includes(bus) || (s.cod||'').toLowerCase().includes(bus)) {
+                htmlTabla += `<tr class="hover:bg-slate-50"><td class="text-[var(--brand-main)] font-mono font-bold pl-4 py-3">${s.cod||''}</td><td class="font-semibold text-[var(--brand-dark)]">${s.nom||''}</td><td class="text-slate-500 text-[10px]">${s.mar||''}</td><td class="text-center font-bold text-sm ${esBajo?'text-[var(--brand-accent)]':''}">${s.can||0}</td><td class="text-slate-500 font-medium">$${s.cos||0}</td><td class="text-[var(--brand-main)] font-bold text-[11px]">${gan}%</td><td class="text-[var(--brand-dark)] font-bold text-sm">$${s.pre||0}</td><td class="text-right pr-4 flex justify-end gap-3"><button onclick="editarStock('${k}')" class="text-slate-400 hover:text-[var(--brand-main)]">✏️</button><button onclick="elimStock('${k}')" class="text-slate-300 hover:text-[var(--brand-accent)]">✕</button></td></tr>`;
+            }
+        });
+        document.getElementById('s-t').innerHTML = htmlTabla; document.getElementById('s-alertas-lista').innerHTML = htmlAlertas || '<p class="text-[10px] text-slate-400 font-medium text-center py-4 bg-white rounded-lg border border-slate-100">Stock Saludable ✅</p>';
     }
+    function editarStock(k) { let s = db.stock[k]; document.getElementById('s-key').value = k; document.getElementById('s-cod').value = s.cod || ''; document.getElementById('s-nom').value = s.nom || ''; document.getElementById('s-mar').value = s.mar || ''; document.getElementById('s-tal').value = s.tal || ''; document.getElementById('s-col').value = s.col || ''; document.getElementById('s-can').value = s.can || 0; document.getElementById('s-cos').value = s.cos || 0; document.getElementById('s-pre').value = s.pre || 0; calcularMargenDesdePrecio(); window.scrollTo(0,0); }
+    async function elimStock(k) { const pass = prompt("Contraseña:"); if (pass !== STOCK_PASS) return; if(confirm("¿Eliminar?")) { delete db.stock[k]; await syncDB("stock", db.stock); } }
 
-    function editarStock(k) { 
-        let s = db.stock[k]; 
-        document.getElementById('s-key').value = k; 
-        document.getElementById('s-cod').value = s.cod; 
-        document.getElementById('s-nom').value = s.nom;
-        document.getElementById('s-mar').value = s.mar; 
-        document.getElementById('s-tal').value = s.tal; 
-        document.getElementById('s-col').value = s.col; 
-        document.getElementById('s-can').value = s.can; 
-        document.getElementById('s-cos').value = s.cos; 
-        document.getElementById('s-pre').value = s.pre; 
-        calcularMargenDesdePrecio(); 
-        window.scrollTo(0,0);
-    }
-
-    async function elimStock(k) { 
-        if(confirm("¿Eliminar?")) { 
-            delete db.stock[k]; 
-            await syncDB("stock", db.stock);
-        } 
-    }
-
-    function buscarProductosVenta(val) {
-        const div = document.getElementById('v-sugerencias');
-        if (val.length < 1) { div.classList.add('hidden'); return; }
-        const matches = Object.entries(db.stock).filter(([k, s]) => s.nom.toUpperCase().includes(val.toUpperCase()) || s.cod.toUpperCase().includes(val.toUpperCase()));
-        div.innerHTML = matches.map(([k, s]) => `<div class="sugerencia-item p-3 border-b cursor-pointer" onclick="seleccionarProdVenta('${s.cod}')"><div class="text-[10px] font-black text-rose-500">${s.cod}</div><div class="text-sm font-bold">${s.nom}</div><div class="text-rose-600 font-black">$${s.pre}</div></div>`).join('');
-        div.classList.remove('hidden');
-    }
-
-    function seleccionarProdVenta(cod) { 
-        document.getElementById('v-scan').value = cod; 
-        document.getElementById('v-sugerencias').classList.add('hidden'); 
-        addCarro();
-    }
-
+    // VENTAS Y CARRITO
+    function buscarProductosVenta(val) { const div = document.getElementById('v-sugerencias'); if (val.length < 1) { div.classList.add('hidden'); return; } const matches = Object.entries(db.stock).filter(([k, s]) => (s.nom||'').toUpperCase().includes(val.toUpperCase()) || (s.cod||'').toUpperCase().includes(val.toUpperCase())); div.innerHTML = matches.map(([k, s]) => `<div class="sugerencia-item p-3 border-b border-gray-100" onclick="seleccionarProdVenta('${s.cod}')"><div class="text-[9px] font-bold text-[var(--brand-main)] font-mono">${s.cod}</div><div class="text-xs font-semibold text-[var(--brand-dark)]">${s.nom}</div><div class="text-[var(--brand-main)] font-bold text-sm">$${s.pre}</div></div>`).join(''); div.classList.remove('hidden'); }
+    function seleccionarProdVenta(cod) { document.getElementById('v-scan').value = cod; document.getElementById('v-sugerencias').classList.add('hidden'); addCarro(); }
     function addCarro() {
-        let cod = document.getElementById('v-scan').value.toUpperCase();
-        let cant = parseInt(document.getElementById('v-cant-v').value) || 1;
-        let k = Object.keys(db.stock).find(key => db.stock[key].cod == cod);
-        if(k && db.stock[k].can >= cant) { 
-            carro.push({ k, nom: db.stock[k].nom, pre: db.stock[k].pre, cant: cant, tal: db.stock[k].tal });
-            document.getElementById('v-scan').value = ''; 
-            renderV(); 
+        let cod = document.getElementById('v-scan').value.toUpperCase(); let cant = parseInt(document.getElementById('v-cant-v').value) || 1; let k = Object.keys(db.stock).find(key => db.stock[key].cod === cod);
+        if(k) {
+            let stockDisp = db.stock[k].can; let indexE = carro.findIndex(item => item.k === k);
+            if (indexE !== -1) { let nuevaC = carro[indexE].cant + cant; if (nuevaC <= stockDisp) carro[indexE].cant = nuevaC; else { alert("Stock insuficiente"); return; } } 
+            else { if (stockDisp >= cant) carro.push({ k, nom: db.stock[k].nom, pre: db.stock[k].pre, cant: cant, tal: db.stock[k].tal }); else { alert("Stock insuficiente"); return; } }
+            document.getElementById('v-scan').value = ''; document.getElementById('v-cant-v').value = 1; renderV(); 
         }
     }
-
+    function calcularTotalCarro() { return carro.reduce((suma, item) => suma + (item.pre * item.cant), 0); }
     function renderV() {
-        let t = 0;
-        document.getElementById('v-t').innerHTML = carro.map((i, idx) => { 
-            let sub = i.pre * i.cant; 
-            t += sub; 
-            return `<tr class="border-b"><td class="py-3">${i.nom}</td><td class="text-slate-500">T: ${i.tal}</td><td class="text-center">${i.cant}</td><td>$${i.pre}</td><td class="text-rose-600 font-black">$${sub}</td><td class="text-right"><button onclick="carro.splice(${idx},1);renderV()">✕</button></td></tr>`; 
-        }).join('');
-        document.getElementById('v-tot').innerText = t.toLocaleString();
+        let t = 0; document.getElementById('v-t').innerHTML = carro.map((i, idx) => { let sub = i.pre * i.cant; t += sub; return `<tr class="border-b hover:bg-[var(--brand-light)] transition-colors"><td class="p-4 font-semibold text-[var(--brand-dark)] text-sm pl-6">${i.nom}</td><td class="text-slate-500 text-[11px] font-medium">T: ${i.tal}</td><td class="text-center"><input type="number" value="${i.cant}" min="1" class="input-cant-carrito" onchange="actualizarCantidad(${idx}, this.value)"></td><td class="font-mono text-slate-500 font-semibold text-xs">$${i.pre.toLocaleString('es-AR')}</td><td class="text-[var(--brand-main)] font-bold text-lg">$${sub.toLocaleString('es-AR')}</td><td class="text-right pr-6"><button onclick="quitarDelCarro(${idx})" class="text-slate-300 hover:text-[var(--brand-accent)] font-bold text-xl transition-all">✕</button></td></tr>`; }).join('');
+        document.getElementById('v-tot').innerText = t.toLocaleString('es-AR'); if(!document.getElementById('v-multi-pago-container').classList.contains('hidden')) { document.getElementById('v-monto-1').value = t; document.getElementById('v-monto-2').value = 0; }
+    }
+    function actualizarCantidad(idx, nuevaC) { nuevaC = parseInt(nuevaC); if (isNaN(nuevaC) || nuevaC < 1) nuevaC = 1; carro[idx].cant = nuevaC; renderV(); }
+    function quitarDelCarro(idx) { carro.splice(idx, 1); renderV(); }
+    function toggleMultiPago() {
+        const met = document.getElementById('v-pago').value; const multiC = document.getElementById('v-multi-pago-container'); const detS = document.getElementById('v-pago-detalle'); const total = calcularTotalCarro();
+        if (met === 'DIVIDIDO') { multiC.classList.remove('hidden'); detS.classList.add('hidden'); document.getElementById('v-monto-1').value = total; document.getElementById('v-monto-2').value = 0; } else { multiC.classList.add('hidden'); toggleDetallePago(); }
+    }
+    function toggleDetallePago() { const m = document.getElementById('v-pago').value; const s = document.getElementById('v-pago-detalle'); const DET = { "TRANSFERENCIA": db.medios.transferencia, "TARJETA": db.medios.tarjeta }; if(DET[m] && DET[m].length > 0){ s.classList.remove('hidden'); s.innerHTML = DET[m].map(o=>`<option value="${o}">${o}</option>`).join(''); } else s.classList.add('hidden'); }
+    
+    function imprimirTicketVenta(tot, items, met, cliNom) {
+        let fecha = new Date().toLocaleString();
+        let html = `<div style="width:300px; padding:10px; font-family:monospace; margin:0 auto; font-size:12px; color:black;">
+            <h2 style="text-align:center; margin-bottom:5px; text-transform:uppercase; font-size:16px; font-weight:bold;">SOFIA SHOWROOM</h2>
+            <p style="text-align:center; font-size:10px; margin-top:0;">${fecha}</p>
+            <hr style="border-top:1px dashed black; margin:10px 0;">
+            <p style="margin:5px 0;"><strong>Cliente:</strong> ${cliNom}</p>
+            <p style="margin:5px 0;"><strong>Medio:</strong> ${met}</p>
+            <hr style="border-top:1px dashed black; margin:10px 0;">
+            <table style="width:100%; font-size:12px; margin-bottom:10px;">
+                ${items.map(i => `<tr><td style="padding:3px 0;">${i.cant}x ${i.nom}</td><td style="text-align:right; padding:3px 0;">$${(i.pre*i.cant).toLocaleString('es-AR')}</td></tr>`).join('')}
+            </table>
+            <hr style="border-top:1px dashed black; margin:10px 0;">
+            <h3 style="text-align:right; font-size:16px; font-weight:bold;">TOTAL: $${tot.toLocaleString('es-AR')}</h3>
+            <p style="text-align:center; margin-top:20px; font-size:11px;">¡Gracias por su compra!</p>
+        </div>`;
+        document.getElementById('ticket-print').innerHTML = html; window.print();
+    }
+
+    function imprimirTicketCobro(monto, cliNom, medio, detalleInfo) {
+        let fecha = new Date().toLocaleString();
+        let html = `<div style="width:300px; padding:10px; font-family:monospace; margin:0 auto; font-size:12px; color:black;">
+            <h2 style="text-align:center; margin-bottom:5px; text-transform:uppercase; font-size:16px; font-weight:bold;">SOFIA SHOWROOM</h2>
+            <p style="text-align:center; font-size:10px; margin-top:0;">${fecha}</p>
+            <hr style="border-top:1px dashed black; margin:10px 0;">
+            <h3 style="text-align:center; font-weight:bold; font-size:14px;">RECIBO DE PAGO</h3>
+            <p style="margin:5px 0;"><strong>Involucrado:</strong> ${cliNom}</p>
+            <p style="margin:5px 0;"><strong>Medio:</strong> ${medio}</p>
+            <p style="margin:5px 0;"><strong>Concepto:</strong> ${detalleInfo || 'Abono Cuenta Corriente'}</p>
+            <hr style="border-top:1px dashed black; margin:10px 0;">
+            <h3 style="text-align:right; font-size:16px; font-weight:bold;">ABONADO: $${monto.toLocaleString('es-AR')}</h3>
+            <p style="text-align:center; margin-top:20px; font-size:11px;">¡Muchas gracias!</p>
+        </div>`;
+        document.getElementById('ticket-print').innerHTML = html; window.print();
     }
 
     async function finalizarVenta() {
-        if(!carro.length) return;
-        let tot = parseInt(document.getElementById('v-tot').innerText.replace(/\./g, ''));
-        let met = document.getElementById('v-pago').value; 
-        let cliK = document.getElementById('v-cli').value;
-        let mF = (met == 'TRANSFERENCIA' || met == 'TARJETA') ? `${met} (${document.getElementById('v-pago-detalle').value})` : met;
-        let detalleCaja = "VENTA: " + carro.map(c => `(${c.cant}) ${c.nom}`).join(', ');
-        
+        if(!carro.length) return; let tot = calcularTotalCarro(); let met = document.getElementById('v-pago').value; let cliK = document.getElementById('v-cli').value; let cliNom = cliK !== "null" ? db.clientes[cliK].nom : "C. FINAL"; let detC = "VENTA: " + carro.map(c => `(${c.cant}) ${c.nom}`).join(', '); const fHoy = new Date().toISOString().split('T')[0]; const hHoy = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); let medioF = met;
+        let pDet = document.getElementById('v-pago-detalle').value;
+        if (met === "DIVIDIDO") { let m1 = parseInt(document.getElementById('v-monto-1').value); let t1 = document.getElementById('v-medio-1').value; let m2 = parseInt(document.getElementById('v-monto-2').value); let t2 = document.getElementById('v-medio-2').value; if ((m1 + m2) !== tot) { alert("Los montos no coinciden con el total."); return; } medioF = `DIV. (${t1} $${m1} + ${t2} $${m2})`; } else medioF = (met === 'TRANSFERENCIA' || met === 'TARJETA') && pDet ? `${met} (${pDet})` : met;
         carro.forEach(c => { if(db.stock[c.k]) db.stock[c.k].can -= c.cant; });
+        if(met === "CUENTA CORRIENTE" && cliK !== "null") { if(!db.clientes[cliK].deudas) db.clientes[cliK].deudas = []; db.clientes[cliK].deudas.push({ id: Date.now(), f: fHoy, c: detC, v: tot, saldo: tot }); db.clientes[cliK].saldo = (db.clientes[cliK].saldo || 0) + tot; }
         
-        const ahora = new Date();
-        const fechaHoy = ahora.toISOString().split('T')[0];
+        db.caja["C" + Date.now()] = { f: fHoy, h: hHoy, c: detC, cli: cliNom, cliKey: cliK, v: tot, tp: "ING", m: medioF, items: carro.map(c => ({k:c.k, cant:c.cant, nom:c.nom, pre:c.pre})) }; 
+        let carroCopia = [...carro]; carro = []; document.getElementById('v-pago').value = "EFECTIVO"; toggleMultiPago(); renderV(); await syncDB("", db);
         
-        if(met == "CUENTA CORRIENTE" && cliK != "null") {
-            if(!db.clientes[cliK].deudas) db.clientes[cliK].deudas = [];
-            db.clientes[cliK].deudas.push({ id: Date.now(), f: fechaHoy, c: detalleCaja, v: tot, saldo: tot });
-            db.clientes[cliK].saldo = (db.clientes[cliK].saldo || 0) + tot;
-        }
-        
-        db.caja["C"+Date.now()] = { 
-            f: fechaHoy, 
-            h: ahora.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), 
-            c: detalleCaja, 
-            cli: (cliK != "null" ? db.clientes[cliK].nom : "C. FINAL"), 
-            cliKey: cliK, 
-            v: tot, 
-            tp: "ING", 
-            m: mF, 
-            items: carro.map(c => ({k:c.k, cant:c.cant})) 
+        if(confirm("Venta Registrada ✅\n\n¿Deseas imprimir un comprobante?")) { imprimirTicketVenta(tot, carroCopia, medioF, cliNom); }
+    }
+    function renderVentasHoy() { const hoy = new Date().toISOString().split('T')[0]; document.getElementById('v-historial').innerHTML = Object.values(db.caja).filter(x => x.f === hoy && x.tp === "ING").reverse().map(x => `<tr class="bg-white"><td class="text-slate-400 font-mono text-[10px] pl-4 py-3">${x.h}</td><td class="font-medium text-[var(--brand-dark)]">${x.cli}</td><td class="text-slate-500 italic text-[10px]">${x.c}</td><td class="text-slate-500 text-[10px]">${x.m||''}</td><td class="text-right font-semibold text-[var(--brand-dark)] text-[13px] pr-4">$${x.v.toLocaleString('es-AR')}</td></tr>`).join(''); }
+
+    // PROVEEDORES Y COMPRAS
+    async function pushProv() {
+        const k = document.getElementById('prov-key').value || "PR" + Date.now();
+        db.proveedores[k] = {
+            nom: document.getElementById('prov-nom').value.toUpperCase(),
+            tel: document.getElementById('prov-tel').value,
+            cuit: document.getElementById('prov-cuit').value,
+            dir: document.getElementById('prov-dir').value.toUpperCase(),
+            cond: document.getElementById('prov-cond').value,
+            saldo: db.proveedores[k] ? db.proveedores[k].saldo : 0
         };
-        
-        carro = []; 
-        renderV(); 
-        await syncDB("", db);
+        await syncDB("proveedores", db.proveedores);
+        document.getElementById('prov-key').value = "";
+        document.getElementById('prov-nom').value = "";
+        document.getElementById('prov-tel').value = "";
+        document.getElementById('prov-cuit').value = "";
+        document.getElementById('prov-dir').value = "";
+        document.getElementById('prov-cond').value = "IVA RESPONSABLE INSCRIPTO";
     }
 
-    function renderVentasHoy() {
-        const hoy = new Date().toISOString().split('T')[0];
-        document.getElementById('v-historial').innerHTML = Object.values(db.caja).filter(x => x.f === hoy && x.tp === "ING").reverse().map(x => `<tr><td class="py-2 text-rose-500 font-mono">${x.h}</td><td class="font-bold">${x.cli}</td><td class="text-slate-400 italic">${x.c}</td><td>${x.m}</td><td class="text-right font-black text-emerald-600">$${x.v}</td></tr>`).join('');
-    }
+    function renderProveedores() {
+        const txt = document.getElementById('prov-search').value.toLowerCase(); 
+        document.getElementById('prov-list').innerHTML = Object.entries(db.proveedores)
+            .filter(([k,v]) => (v.nom||'').toLowerCase().includes(txt) || (v.cuit||'').toLowerCase().includes(txt)) 
+            .map(([k,v]) => `<div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group hover:border-indigo-500 transition-all"><div class="absolute top-0 left-0 w-1.5 h-full ${v.saldo>0?'bg-indigo-600':'bg-slate-300'} opacity-80"></div><div class="flex justify-between font-bold uppercase text-xs mb-4 pl-2"><span class="text-[var(--brand-dark)]">${v.nom||'--'}</span><div class="flex gap-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="editarProv('${k}')" class="text-slate-300 hover:text-indigo-600">✏️</button><button onclick="elimProv('${k}')" class="text-slate-300 hover:text-[var(--brand-accent)]">✕</button></div></div><div class="flex justify-between items-end pl-2"><div><p class="text-[9px] uppercase text-slate-400 font-bold tracking-widest">Saldo Deudor</p><p class="text-2xl font-bold ${v.saldo>0?'text-indigo-600':'text-slate-400'} tracking-tight">$${(v.saldo || 0).toLocaleString('es-AR')}</p></div><button onclick="verFichaProv('${k}')" class="bg-indigo-50 text-indigo-800 px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-colors border border-indigo-200 shadow-sm">Ver Ficha</button></div></div>`).join(''); 
 
-    async function pushCli() {
-        const k = document.getElementById('c-key').value || "L" + Date.now();
-        db.clientes[k] = { 
-            ...db.clientes[k], 
-            nom: document.getElementById('c-nom').value.toUpperCase(), 
-            dni: document.getElementById('c-dni').value, 
-            cel: document.getElementById('c-cel').value, 
-            dir: document.getElementById('c-dir').value, 
-            rec: document.getElementById('c-rec').value, 
-            saldo: db.clientes[k] ? db.clientes[k].saldo : 0 
-        };
-        await syncDB("clientes", db.clientes); 
-        limpiarInputs('c');
-    }
-
-    function renderClientes() {
-        const txt = document.getElementById('c-search').value.toLowerCase();
-        document.getElementById('c-list').innerHTML = Object.entries(db.clientes).filter(([k,v]) => v.nom.toLowerCase().includes(txt)).map(([k,v]) => `<div class="bg-white p-5 rounded-3xl border shadow-sm relative"><div class="absolute top-0 left-0 w-1 h-full ${v.saldo>0?'bg-rose-500':'bg-emerald-400'}"></div><div class="flex justify-between font-black uppercase text-xs mb-3"><span>${v.nom}</span><div class="flex gap-2"><button onclick="editarCli('${k}')">✏️</button><button onclick="elimCli('${k}')">✕</button></div></div><div class="flex justify-between items-end"><div><p class="text-[9px] uppercase text-slate-300">Saldo</p><p class="text-lg font-black ${v.saldo>0?'text-rose-600':'text-emerald-500'}">$${v.saldo || 0}</p></div><button onclick="verFicha('${k}')" class="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-bold">Ficha</button></div></div>`).join('');
-    }
-
-    function verFicha(k) {
-        clienteActualKey = k;
-        const c = db.clientes[k];
-        document.getElementById('ficha-nom').innerText = c.nom; 
-        document.getElementById('ficha-saldo').innerText = "$" + (c.saldo || 0);
-        document.getElementById('ficha-datos').innerHTML = `<span>DNI: ${c.dni}</span><span>CEL: ${c.cel}</span>`;
-        const hoy = new Date();
-        document.getElementById('lista-deudas-individuales').innerHTML = (c.deudas || []).filter(d => d.saldo > 0).map(d => {
-            const fDeuda = new Date(d.f);
-            const diff = Math.floor((hoy - fDeuda) / (1000 * 60 * 60 * 24));
-            const restantes = 30 - diff;
-            return `<div class="bg-slate-50 p-2 rounded-xl border flex justify-between items-center text-[9px] uppercase"><div><p class="font-bold">${d.c}</p><p class="text-[8px] text-slate-400">${d.f}</p></div><div class="text-right"><p class="font-black text-rose-500">$${d.saldo}</p><p class="${restantes<=0?'text-rose-600 font-black':'text-slate-500'}">${restantes<=0?'VENCIDO':'Vence en: '+restantes+' d'}</p></div></div>`;
-        }).join('') || '<p class="text-[9px] italic text-slate-300 text-center">Sin deudas</p>';
-        const movs = Object.values(db.caja).filter(x => x.cliKey === k).reverse();
-        document.getElementById('ficha-movimientos').innerHTML = movs.map(x => `<tr class="border-b"><td class="py-3 text-slate-400 font-mono text-[9px]">${x.f}</td><td class="py-3 text-[9px] uppercase">${x.c}</td><td class="py-3 text-right font-black ${x.c.includes('PAGO') ? 'text-emerald-600' : 'text-rose-600'}">$${x.v}</td></tr>`).join('');
-        document.getElementById('modal-cliente').classList.remove('hidden');
-    }
-
-    async function deudaManual() {
-        const concepto = prompt("Concepto:");
-        const monto = parseInt(prompt("Monto:"));
-        if(concepto && monto > 0) {
-            const fechaHoy = new Date().toISOString().split('T')[0];
-            if(!db.clientes[clienteActualKey].deudas) db.clientes[clienteActualKey].deudas = [];
-            db.clientes[clienteActualKey].deudas.push({ id: Date.now(), f: fechaHoy, c: "CARGA MANUAL: " + concepto.toUpperCase(), v: monto, saldo: monto });
-            db.clientes[clienteActualKey].saldo = (db.clientes[clienteActualKey].saldo || 0) + monto;
-            db.caja["D"+Date.now()] = { f: fechaHoy, h: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), c: "DEUDA MANUAL: "+concepto.toUpperCase(), cli: db.clientes[clienteActualKey].nom, cliKey: clienteActualKey, v: monto, tp: "ING", m: "CUENTA CORRIENTE" };
-            await syncDB("", db);
+        let selectP = document.getElementById('p-prov');
+        if(selectP) {
+            selectP.innerHTML = '<option value="null">PROVEEDOR OCASIONAL</option>' + Object.entries(db.proveedores).map(([k,v])=>`<option value="${k}">${v.nom}</option>`).join('');
         }
+        if(document.getElementById('a').classList.contains('activa')) actualizarSubcuentasBalance();
     }
 
-    async function cobrarFicha() {
-        let montoPago = parseInt(prompt("Monto que entrega el cliente:"));
-        if(montoPago > 0) {
-            let pagoOriginal = montoPago;
-            const c = db.clientes[clienteActualKey]; 
-            c.saldo -= montoPago;
-            if(c.deudas) {
-                c.deudas.sort((a,b) => new Date(a.f) - new Date(b.f));
-                for(let d of c.deudas) {
-                    if(d.saldo > 0) {
-                        if(montoPago >= d.saldo) { montoPago -= d.saldo; d.saldo = 0; } 
-                        else { d.saldo -= montoPago; montoPago = 0; break; }
-                    }
-                }
-            }
-            db.caja["P"+Date.now()] = { f: new Date().toISOString().split('T')[0], h: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), c: "PAGO RECIBIDO (A CTA)", cli: c.nom, cliKey: clienteActualKey, v: pagoOriginal, tp: "ING", m: "EFECTIVO" };
-            await syncDB("", db);
-        }
-    }
-
-    function cerrarFicha() { 
-        document.getElementById('modal-cliente').classList.add('hidden'); 
-        clienteActualKey = null;
-    }
-
-    function editarCli(k) { 
-        let c = db.clientes[k]; 
-        document.getElementById('c-key').value = k; 
-        document.getElementById('c-nom').value = c.nom; 
-        document.getElementById('c-dni').value = c.dni;
-        document.getElementById('c-cel').value = c.cel; 
-        document.getElementById('c-dir').value = c.dir; 
-        document.getElementById('c-rec').value = c.rec; 
+    function editarProv(k) { 
+        let p = db.proveedores[k]; 
+        document.getElementById('prov-key').value = k; 
+        document.getElementById('prov-nom').value = p.nom; 
+        document.getElementById('prov-tel').value = p.tel || ""; 
+        document.getElementById('prov-cuit').value = p.cuit || "";
+        document.getElementById('prov-dir').value = p.dir || "";
+        document.getElementById('prov-cond').value = p.cond || "IVA RESPONSABLE INSCRIPTO";
         window.scrollTo(0,0);
     }
+    async function elimProv(k) { if(confirm("¿Eliminar proveedor?")) { delete db.proveedores[k]; await syncDB("proveedores", db.proveedores); } }
 
-    async function elimCli(k) { 
-        if(confirm("¿Eliminar?")) { 
-            delete db.clientes[k]; 
-            await syncDB("clientes", db.clientes);
+    function verFichaProv(k) {
+        proveedorActualKey = k; const p = db.proveedores[k]; if(!p) return; 
+        document.getElementById('ficha-prov-nom').innerText = p.nom; 
+        document.getElementById('ficha-prov-saldo').innerText = "$" + (p.saldo || 0).toLocaleString('es-AR'); 
+        document.getElementById('ficha-prov-datos').innerHTML = `<span>CUIT: ${p.cuit||'-'}</span><span>CEL: ${p.tel||'-'}</span><span>DIR: ${p.dir||'-'}</span>`; 
+        
+        const hoyTime = new Date().setHours(0,0,0,0);
+        document.getElementById('lista-deudas-prov').innerHTML = (p.deudas || []).filter(d => d.saldo > 0).map(d => { 
+            let fD = d.f ? new Date(d.f + 'T00:00:00').getTime() : hoyTime; 
+            let dR = 30 - Math.floor((hoyTime - fD) / 86400000); 
+            let tC = dR > 0 ? `Vence en ${dR} días` : dR === 0 ? "VENCE HOY" : `VENCIDO HACE ${Math.abs(dR)} DÍAS`; 
+            let cC = dR > 0 ? "text-amber-500" : "text-[var(--brand-accent)] font-bold animate-pulse"; 
+            return `<div class="bg-white p-3 rounded-xl border border-indigo-100 flex justify-between items-center text-[11px] uppercase font-bold shadow-sm"><div><p class="text-[var(--brand-dark)]">${d.c}</p><p class="text-[9px] text-slate-400 mt-0.5">${d.f} <span class="${cC} ml-1 font-bold">${tC}</span></p></div><p class="font-bold text-indigo-600 text-sm">$${d.saldo.toLocaleString('es-AR')}</p></div>`; 
+        }).join('') || '<p class="text-[10px] italic text-slate-400 text-center py-4 bg-white rounded-xl border border-dashed border-slate-200">Sin deudas registradas</p>';
+        
+        const movs = Object.values(db.caja).filter(x => x.cliKey === k).reverse(); 
+        document.getElementById('ficha-movimientos-prov').innerHTML = movs.map(x => `<tr><td class="py-2.5 text-slate-400 font-mono text-[9px] border-b border-slate-100 pl-2">${x.f}</td><td class="py-2.5 text-[9px] uppercase font-semibold text-slate-700 border-b border-slate-100">${x.c}</td><td class="py-2.5 text-right font-bold text-xs ${x.c.includes('PAGO') ? 'text-indigo-600' : 'text-slate-800'} border-b border-slate-100 pr-2">$${x.v.toLocaleString('es-AR')}</td></tr>`).join(''); 
+        
+        document.getElementById('ficha-prov-pago-monto').value = ""; 
+        document.getElementById('ficha-prov-pago-medio').value = "EFECTIVO"; 
+        document.getElementById('container-detalle-pago-prov').classList.add('hidden'); 
+        document.getElementById('modal-proveedor').classList.remove('hidden');
+    }
+
+    function toggleDetallePagoProvFicha() { 
+        const m = document.getElementById('ficha-prov-pago-medio').value; 
+        const s = document.getElementById('ficha-prov-pago-detalle'); 
+        const container = document.getElementById('container-detalle-pago-prov'); 
+        const DET = { "TRANSFERENCIA": db.medios.transferencia, "TARJETA": db.medios.tarjeta }; 
+        if(DET[m] && DET[m].length > 0){ container.classList.remove('hidden'); s.innerHTML = DET[m].map(o=>`<option value="${o}">${o}</option>`).join(''); } else container.classList.add('hidden'); 
+    }
+
+    async function deudaManualProv() { 
+        const c = prompt("Concepto de la deuda (Compra libre):"); const m = parseInt(prompt("Monto adeudado:")); 
+        if(c && m > 0) { 
+            const fH = new Date().toISOString().split('T')[0]; 
+            if(!db.proveedores[proveedorActualKey].deudas) db.proveedores[proveedorActualKey].deudas = []; 
+            db.proveedores[proveedorActualKey].deudas.push({ id: Date.now(), f: fH, c: "DEUDA MANUAL PROV: " + c.toUpperCase(), v: m, saldo: m }); 
+            db.proveedores[proveedorActualKey].saldo = (db.proveedores[proveedorActualKey].saldo || 0) + m; 
+            db.caja["D"+Date.now()] = { f: fH, h: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), c: "DEUDA MANUAL PROV: "+c.toUpperCase(), cli: db.proveedores[proveedorActualKey].nom, cliKey: proveedorActualKey, v: m, tp: "EGR", m: "CTA CTE PROVEEDOR" }; 
+            await syncDB("", db); 
         } 
     }
 
-    function renderCaja() {
-        let tI=0, tE=0, cH="";
-        const fF = document.getElementById('x-filtro-fecha').value; 
-        const fT = document.getElementById('x-filtro-tipo').value;
-        const fM = document.getElementById('x-filtro-medio').value; 
-        const fX = document.getElementById('x-filtro-texto').value.toLowerCase();
+    async function pagarFichaProv() { 
+        let iM = document.getElementById('ficha-prov-pago-monto'); let sM = document.getElementById('ficha-prov-pago-medio'); let sD = document.getElementById('ficha-prov-pago-detalle'); 
+        let montoP = parseInt(iM.value); let medioB = sM.value; let medioE = (medioB === 'TRANSFERENCIA' || medioB === 'TARJETA') && sD.value ? `${medioB} (${sD.value})` : medioB; 
+        if(isNaN(montoP) || montoP <= 0) return; let pagoO = montoP; const p = db.proveedores[proveedorActualKey]; 
         
-        Object.entries(db.caja).reverse().filter(([id, x]) => {
-            let mF = fF ? x.f === fF : true; 
-            let mT = fT === "TODOS" ? true : x.tp === fT;
-            let mM = fM === "TODOS" ? true : x.m.includes(fM); 
-            let mX = (x.cli && x.cli.toLowerCase().includes(fX)) || (x.c && x.c.toLowerCase().includes(fX));
-            return mF && mT && mM && mX;
+        p.saldo -= montoP; 
+        if(p.deudas) { p.deudas.sort((a,b) => new Date(a.f||0) - new Date(b.f||0)); for(let d of p.deudas) { if(d.saldo > 0) { if(montoP >= d.saldo) { montoP -= d.saldo; d.saldo = 0; } else { d.saldo -= montoP; montoP = 0; break; } } } } 
+        
+        db.caja["E"+Date.now()] = { f: new Date().toISOString().split('T')[0], h: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), c: "PAGO A PROVEEDOR", cli: p.nom, cliKey: proveedorActualKey, v: pagoO, tp: "EGR", m: medioE }; 
+        iM.value = ""; await syncDB("", db); 
+
+        if(confirm("Pago a proveedor registrado ✅\n\n¿Deseas imprimir un recibo de entrega?")) { imprimirTicketCobro(pagoO, p.nom, medioE, "Abono / Pago a Proveedor"); }
+    }
+
+    function cerrarFichaProv() { document.getElementById('modal-proveedor').classList.add('hidden'); proveedorActualKey = null; }
+
+    function buscarProductosCompra(val) {
+        const div = document.getElementById('p-sugerencias');
+        if (val.length < 1) { div.classList.add('hidden'); return; }
+        const matches = Object.entries(db.stock).filter(([k, s]) => (s.nom||'').toUpperCase().includes(val.toUpperCase()) || (s.cod||'').toUpperCase().includes(val.toUpperCase()));
+        div.innerHTML = matches.map(([k, s]) => `<div class="sugerencia-item p-3 border-b border-indigo-100" onclick="seleccionarProdCompra('${s.cod}', ${s.cos})"><div class="text-[9px] font-bold text-indigo-500 font-mono">${s.cod}</div><div class="text-xs font-semibold text-slate-800">${s.nom}</div><div class="text-slate-500 text-[10px]">Costo actual: $${s.cos}</div></div>`).join('');
+        div.classList.remove('hidden');
+    }
+
+    function seleccionarProdCompra(cod, costoActual) {
+        document.getElementById('p-scan').value = cod;
+        document.getElementById('p-costo').value = costoActual || "";
+        document.getElementById('p-sugerencias').classList.add('hidden');
+    }
+
+    function addCarroCompra() {
+        let cod = document.getElementById('p-scan').value.toUpperCase();
+        let cant = parseInt(document.getElementById('p-cant').value) || 1;
+        let costo = parseFloat(document.getElementById('p-costo').value) || 0;
+        
+        if(!cod || costo <= 0) { alert("Debe seleccionar un producto e ingresar el costo."); return; }
+        
+        let k = Object.keys(db.stock).find(key => db.stock[key].cod === cod);
+        if(!k) { alert("El producto no existe en el stock. Créelo primero en la pestaña Stock."); return; }
+
+        let indexE = carroCompra.findIndex(item => item.k === k);
+        if (indexE !== -1) {
+            carroCompra[indexE].cant += cant;
+            carroCompra[indexE].costo = costo;
+        } else {
+            carroCompra.push({ k, nom: db.stock[k].nom, costo: costo, cant: cant, tal: db.stock[k].tal });
+        }
+        
+        document.getElementById('p-scan').value = ''; document.getElementById('p-cant').value = 1; document.getElementById('p-costo').value = '';
+        renderPCarro(); 
+    }
+
+    function calcularTotalCompra() { return carroCompra.reduce((suma, item) => suma + (item.costo * item.cant), 0); }
+
+    function renderPCarro() {
+        let t = 0;
+        document.getElementById('p-t').innerHTML = carroCompra.map((i, idx) => { 
+            let sub = i.costo * i.cant; t += sub; 
+            return `<tr class="border-b hover:bg-indigo-50 transition-colors"><td class="p-4 font-semibold text-[var(--brand-dark)] text-sm pl-6">${i.nom}</td><td class="text-slate-500 text-[11px] font-medium">T: ${i.tal}</td><td class="text-center font-bold">${i.cant}</td><td class="font-mono text-slate-500 font-semibold text-xs">$${i.costo.toLocaleString('es-AR')}</td><td class="text-indigo-600 font-bold text-lg">$${sub.toLocaleString('es-AR')}</td><td class="text-right pr-6"><button onclick="quitarDelCarroCompra(${idx})" class="text-slate-300 hover:text-rose-500 font-bold text-xl transition-all">✕</button></td></tr>`; 
+        }).join('');
+        document.getElementById('p-tot').innerText = t.toLocaleString('es-AR');
+    }
+
+    function quitarDelCarroCompra(idx) { carroCompra.splice(idx, 1); renderPCarro(); }
+
+    function toggleDetallePagoCompra() { 
+        const m = document.getElementById('p-pago').value; 
+        const s = document.getElementById('p-pago-detalle'); 
+        const container = document.getElementById('container-detalle-pago-compra'); 
+        const DET = { "TRANSFERENCIA": db.medios.transferencia, "TARJETA": db.medios.tarjeta }; 
+        if(DET[m] && DET[m].length > 0){ container.classList.remove('hidden'); s.innerHTML = DET[m].map(o=>`<option value="${o}">${o}</option>`).join(''); } 
+        else container.classList.add('hidden'); 
+    }
+
+    async function finalizarCompra() {
+        if(!carroCompra.length) return;
+        let tot = calcularTotalCompra();
+        let metBase = document.getElementById('p-pago').value;
+        let pDet = document.getElementById('p-pago-detalle').value;
+        let met = (metBase === 'TRANSFERENCIA' || metBase === 'TARJETA') && pDet ? `${metBase} (${pDet})` : metBase;
+        
+        let provK = document.getElementById('p-prov').value;
+        let provNom = provK !== "null" ? db.proveedores[provK].nom : "PROV. OCASIONAL";
+        let detC = "COMPRA DE STOCK: " + carroCompra.map(c => `(${c.cant}) ${c.nom}`).join(', ');
+        
+        const fHoy = new Date().toISOString().split('T')[0];
+        const hHoy = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+        carroCompra.forEach(c => {
+            if(db.stock[c.k]) {
+                db.stock[c.k].can += c.cant;
+                db.stock[c.k].cos = c.costo; 
+                if(db.stock[c.k].pre > 0) {
+                    db.stock[c.k].margen = Math.round(((db.stock[c.k].pre - c.costo) / c.costo) * 100);
+                }
+            }
+        });
+
+        if(metBase === "CTA CTE PROVEEDOR") {
+            if(provK === "null") { alert("Debe seleccionar un Proveedor específico para usar la cuenta corriente."); return; }
+            if(!db.proveedores[provK].deudas) db.proveedores[provK].deudas = [];
+            db.proveedores[provK].deudas.push({ id: Date.now(), f: fHoy, c: detC, v: tot, saldo: tot });
+            db.proveedores[provK].saldo = (db.proveedores[provK].saldo || 0) + tot;
+        }
+
+        db.caja["E" + Date.now()] = { f: fHoy, h: hHoy, c: detC, cli: provNom, cliKey: provK, v: tot, tp: "EGR", m: met, items: carroCompra.map(c => ({k:c.k, cant:c.cant, costo:c.costo})) };
+        
+        carroCompra = [];
+        document.getElementById('p-pago').value = "EFECTIVO";
+        toggleDetallePagoCompra();
+        renderPCarro();
+        await syncDB("", db);
+        alert("¡Compra registrada correctamente!\nSe actualizó el inventario y se registró el gasto en caja.");
+    }
+
+    // CLIENTES
+    async function pushCli() { const k = document.getElementById('c-key').value || "L" + Date.now(); db.clientes[k] = { ...db.clientes[k], nom: document.getElementById('c-nom').value.toUpperCase(), dni: document.getElementById('c-dni').value, cel: document.getElementById('c-cel').value, dir: document.getElementById('c-dir').value, rec: document.getElementById('c-rec').value, saldo: db.clientes[k] ? db.clientes[k].saldo : 0 }; await syncDB("clientes", db.clientes); limpiarInputs('c'); }
+    function renderClientes() { 
+        const txt = document.getElementById('c-search').value.toLowerCase(); 
+        document.getElementById('c-list').innerHTML = Object.entries(db.clientes)
+            .filter(([k,v]) => (v.nom||'').toLowerCase().includes(txt) || (v.dni||'').toLowerCase().includes(txt)) 
+            .map(([k,v]) => `<div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group hover:border-[var(--brand-main)] transition-all"><div class="absolute top-0 left-0 w-1.5 h-full ${v.saldo>0?'bg-[var(--brand-accent)]':'bg-[var(--brand-main)]'} opacity-80"></div><div class="flex justify-between font-bold uppercase text-xs mb-4 pl-2"><span class="text-[var(--brand-dark)]">${v.nom||'--'}</span><div class="flex gap-2 text-sm opacity-0 group-hover:opacity-100 transition-opacity"><button onclick="editarCli('${k}')" class="text-slate-300 hover:text-[var(--brand-dark)]">✏️</button><button onclick="elimCli('${k}')" class="text-slate-300 hover:text-[var(--brand-accent)]">✕</button></div></div><div class="flex justify-between items-end pl-2"><div><p class="text-[9px] uppercase text-slate-400 font-bold tracking-widest">Deuda Total</p><p class="text-2xl font-bold ${v.saldo>0?'text-[var(--brand-accent)]':'text-slate-400'} tracking-tight">$${(v.saldo || 0).toLocaleString('es-AR')}</p></div><button onclick="verFicha('${k}')" class="bg-slate-50 text-[var(--brand-dark)] px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-[var(--brand-dark)] hover:text-white transition-colors border border-slate-200 shadow-sm">Ver Ficha</button></div></div>`).join(''); 
+    }
+    function verFicha(k) {
+        clienteActualKey = k; const c = db.clientes[k]; if(!c) return; document.getElementById('ficha-nom').innerText = c.nom; document.getElementById('ficha-saldo').innerText = "$" + (c.saldo || 0).toLocaleString('es-AR'); document.getElementById('ficha-datos').innerHTML = `<span>DNI: ${c.dni||'-'}</span><span>CEL: ${c.cel||'-'}</span><span>DIR: ${c.dir||'-'}</span>`; const hoyTime = new Date().setHours(0,0,0,0);
+        document.getElementById('lista-deudas-individuales').innerHTML = (c.deudas || []).filter(d => d.saldo > 0).map(d => { let fD = d.f ? new Date(d.f + 'T00:00:00').getTime() : hoyTime; let dR = 30 - Math.floor((hoyTime - fD) / 86400000); let tC = dR > 0 ? `Quedan ${dR} días` : dR === 0 ? "VENCE HOY" : `VENCIDO HACE ${Math.abs(dR)} DÍAS`; let cC = dR > 0 ? "text-amber-500" : "text-[var(--brand-accent)] font-bold animate-pulse"; return `<div class="bg-white p-3 rounded-xl border border-slate-100 flex justify-between items-center text-[11px] uppercase font-bold shadow-sm"><div><p class="text-[var(--brand-dark)]">${d.c}</p><p class="text-[9px] text-slate-400 mt-0.5">${d.f} <span class="${cC} ml-1 font-bold">${tC}</span></p></div><p class="font-bold text-[var(--brand-accent)] text-sm">$${d.saldo.toLocaleString('es-AR')}</p></div>`; }).join('') || '<p class="text-[10px] italic text-slate-400 text-center py-4 bg-white rounded-xl border border-dashed border-slate-200">Sin deudas de plazo activo</p>';
+        const movs = Object.values(db.caja).filter(x => x.cliKey === k).reverse(); document.getElementById('ficha-movimientos').innerHTML = movs.map(x => `<tr><td class="py-2.5 text-slate-400 font-mono text-[9px] border-b border-slate-100 pl-2">${x.f}</td><td class="py-2.5 text-[9px] uppercase font-semibold text-slate-700 border-b border-slate-100">${x.c}</td><td class="py-2.5 text-right font-bold text-xs ${x.c.includes('PAGO') ? 'text-[var(--brand-main)]' : 'text-[var(--brand-dark)]'} border-b border-slate-100 pr-2">$${x.v.toLocaleString('es-AR')}</td></tr>`).join(''); document.getElementById('ficha-cobro-monto').value = ""; document.getElementById('ficha-cobro-medio').value = "EFECTIVO"; document.getElementById('container-detalle-cobro-ficha').classList.add('hidden'); document.getElementById('modal-cliente').classList.remove('hidden');
+    }
+    function toggleDetalleCobroFicha() { const m = document.getElementById('ficha-cobro-medio').value; const s = document.getElementById('ficha-cobro-detalle'); const container = document.getElementById('container-detalle-cobro-ficha'); const DET = { "TRANSFERENCIA": db.medios.transferencia, "TARJETA": window.db.medios.tarjeta }; if(DET[m] && DET[m].length > 0){ container.classList.remove('hidden'); s.innerHTML = DET[m].map(o=>`<option value="${o}">${o}</option>`).join(''); } else container.classList.add('hidden'); }
+    async function deudaManual() { const c = prompt("Concepto:"); const m = parseInt(prompt("Monto:")); if(c && m > 0) { const fH = new Date().toISOString().split('T')[0]; if(!db.clientes[clienteActualKey].deudas) db.clientes[clienteActualKey].deudas = []; db.clientes[clienteActualKey].deudas.push({ id: Date.now(), f: fH, c: "CARGA MANUAL: " + c.toUpperCase(), v: m, saldo: m }); db.clientes[clienteActualKey].saldo = (db.clientes[clienteActualKey].saldo || 0) + m; db.caja["D"+Date.now()] = { f: fH, h: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), c: "DEUDA MANUAL: "+c.toUpperCase(), cli: db.clientes[clienteActualKey].nom, cliKey: clienteActualKey, v: m, tp: "ING", m: "CUENTA CORRIENTE" }; await syncDB("", db); } }
+    
+    async function cobrarFicha() { 
+        let iM = document.getElementById('ficha-cobro-monto'); let sM = document.getElementById('ficha-cobro-medio'); let sD = document.getElementById('ficha-cobro-detalle'); 
+        let montoP = parseInt(iM.value); let medioB = sM.value; let medioE = (medioB === 'TRANSFERENCIA' || medioB === 'TARJETA') && sD.value ? `${medioB} (${sD.value})` : medioB; 
+        if(isNaN(montoP) || montoP <= 0) return; let pagoO = montoP; const c = db.clientes[clienteActualKey]; 
+        
+        c.saldo -= montoP; 
+        if(c.deudas) { c.deudas.sort((a,b) => new Date(a.f||0) - new Date(b.f||0)); for(let d of c.deudas) { if(d.saldo > 0) { if(montoP >= d.saldo) { montoP -= d.saldo; d.saldo = 0; } else { d.saldo -= montoP; montoP = 0; break; } } } } 
+        
+        db.caja["P"+Date.now()] = { f: new Date().toISOString().split('T')[0], h: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), c: "PAGO RECIBIDO A CTA", cli: c.nom, cliKey: clienteActualKey, v: pagoO, tp: "ING", m: medioE }; 
+        iM.value = ""; await syncDB("", db); 
+
+        if(confirm("Cobro Registrado ✅\n\n¿Deseas imprimir el recibo de pago?")) { imprimirTicketCobro(pagoO, c.nom, medioE, "Abono a Cuenta Corriente"); }
+    }
+    function cerrarFicha() { document.getElementById('modal-cliente').classList.add('hidden'); clienteActualKey = null; }
+    function editarCli(k) { let c = db.clientes[k]; document.getElementById('c-key').value = k; document.getElementById('c-nom').value = c.nom; document.getElementById('c-dni').value = c.dni; document.getElementById('c-cel').value = c.cel; document.getElementById('c-dir').value = c.dir; document.getElementById('c-rec').value = c.rec; window.scrollTo(0,0); }
+    async function elimCli(k) { if(confirm("¿Eliminar?")) { delete db.clientes[k]; await syncDB("clientes", db.clientes); } }
+
+    // CAJA Y BALANCE
+    async function pushEgreso() { const c = document.getElementById('x-egr-concepto').value.toUpperCase(); const m = parseInt(document.getElementById('x-egr-monto').value); const med = document.getElementById('x-egr-medio').value; if (!c || isNaN(m) || m <= 0) return; const fH = new Date().toISOString().split('T')[0]; const hH = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); db.caja["E" + Date.now()] = { f: fH, h: hH, c: "EGRESO: " + c, cli: "-", cliKey: null, v: m, tp: "EGR", m: med }; await syncDB("", db); document.getElementById('x-egr-concepto').value = ''; document.getElementById('x-egr-monto').value = ''; }
+    function renderCaja() {
+        let tI=0, tE=0, cH=""; const fF = document.getElementById('x-filtro-fecha').value; const fT = document.getElementById('x-filtro-tipo').value; const fM = document.getElementById('x-filtro-medio').value; const fX = document.getElementById('x-filtro-texto').value.toLowerCase();
+        
+        let movsCaja = Object.entries(db.caja).sort((a,b) => { let dateA = a[1].f || ""; let dateB = b[1].f || ""; if (dateA !== dateB) return dateA.localeCompare(dateB); let timeA = a[1].h || ""; let timeB = b[1].h || ""; if (timeA !== timeB) return timeA.localeCompare(timeB); return a[0].localeCompare(b[0]); }).reverse(); 
+
+        movsCaja.filter(([id, x]) => { if(!x) return false; let mF = fF ? x.f === fF : true; let mT = fT === "TODOS" ? true : x.tp === fT; let mM = fM === "TODOS" ? true : (x.m && x.m.includes(fM)); let mX = (x.cli && x.cli.toLowerCase().includes(fX)) || (x.c && x.c.toLowerCase().includes(fX)); return mF && mT && mM && mX;
         }).forEach(([id, x]) => { 
-            if(x.tp=='ING') tI+=x.v; else tE+=x.v; 
-            cH+=`<tr class="border-b"><td class="p-4">${x.f} <br> ${x.h}</td><td class="p-4 uppercase">${x.cli || '-'}</td><td class="p-4 text-slate-500 uppercase">${x.c}</td><td class="p-4 uppercase">${x.m}</td><td class="p-4 text-right ${x.tp=='ING'?'text-emerald-500':'text-rose-600'} font-black">$${x.v.toLocaleString()}</td><td class="p-4 text-right"><button onclick="elimMov('${id}')">✕</button></td></tr>`; 
+            let montoMostrar = x.v || 0; let m = x.m || '';
+            if (fM !== "TODOS" && m.includes("DIVIDIDO")) { const regex = new RegExp(fM + "\\s*\\$(\\d+)"); const match = m.match(regex); if (match && match[1]) montoMostrar = parseInt(match[1]); }
+            if(x.tp === 'ING') tI += montoMostrar; else tE += montoMostrar; 
+            cH+=`<tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors"><td class="p-3 pl-4 text-slate-400 font-mono text-[9px]">${x.f} <br> ${x.h}</td><td class="p-3 font-semibold text-[var(--brand-dark)] text-[11px]">${x.cli || '-'}</td><td class="p-3 text-slate-600 text-[10px]">${x.c}</td><td class="p-3 text-slate-500 font-medium text-[9px]">${x.m||'-'}</td><td class="p-3 text-right ${x.tp==='ING'?'text-[var(--brand-dark)]':'text-[var(--brand-accent)]'} font-bold text-sm pr-4">$${montoMostrar.toLocaleString('es-AR')}</td><td class="p-3 text-right pr-4"><button onclick="elimMov('${id}')" class="text-slate-300 hover:text-[var(--brand-accent)] font-light text-xl">✕</button></td></tr>`; 
+        });
+        document.getElementById('resumen-caja').innerHTML = `<div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm text-center"><p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Ingresos</p><p class="text-3xl font-semibold text-[var(--brand-dark)] tracking-tight mt-1">$${tI.toLocaleString('es-AR')}</p></div><div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm text-center"><p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Egresos</p><p class="text-3xl font-semibold text-[var(--brand-accent)] tracking-tight mt-1">$${tE.toLocaleString('es-AR')}</p></div><div class="bg-[var(--brand-dark)] p-5 rounded-xl shadow-md text-center"><p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Neto</p><p class="text-3xl font-bold text-white tracking-tight mt-1">$${(tI-tE).toLocaleString('es-AR')}</p></div>`;
+        document.getElementById('x-t').innerHTML = cH || '<tr><td colspan="6" class="text-center py-8 text-slate-400 italic font-medium text-xs bg-white rounded-lg">Sin movimientos registrados</td></tr>';
+    }
+    async function elimMov(id) { if(!confirm("¿Revertir?")) return; const m = db.caja[id]; if(m.items) m.items.forEach(i => { if(db.stock[i.k]) db.stock[i.k].can += i.cant; }); if((m.m||'').includes("CUENTA CORRIENTE") && m.cliKey && db.clientes[m.cliKey]) { db.clientes[m.cliKey].saldo -= m.v; db.clientes[m.cliKey].deudas = (db.clientes[m.cliKey].deudas||[]).filter(d => d.v !== m.v); } delete db.caja[id]; await syncDB("", db); }
+    
+    function formatMayorMoney(val) { 
+        if (val === 0) return ""; 
+        if (val < 0) return `<span class="text-haber">(${Math.abs(val).toLocaleString('es-AR')})</span>`; 
+        return val.toLocaleString('es-AR'); 
+    }
+
+    function actualizarSubcuentasBalance() {
+        let tipo = document.getElementById('a-filtro-tipo-cuenta').value;
+        let subSelect = document.getElementById('a-filtro-subcuenta');
+        let html = "";
+
+        if (tipo === 'GENERAL') {
+            html = `<option value="TODAS">CAJA GLOBAL (Todas)</option>
+                    <option value="EFECTIVO">EFECTIVO</option>
+                    <option value="TRANSFERENCIA">TRANSFERENCIAS (Todas)</option>
+                    <option value="TARJETA">TARJETAS (Todas)</option>
+                    <option value="CUENTA CORRIENTE">CUENTAS A COBRAR (Clientes)</option>
+                    <option value="CTA CTE PROVEEDOR">CUENTAS A PAGAR (Proveedores)</option>`;
+        } else if (tipo === 'BILLETERAS') {
+            (db.medios.transferencia || []).forEach(m => { html += `<option value="MEDIO_${m}">${m}</option>`; });
+            if(!db.medios.transferencia || db.medios.transferencia.length === 0) html = `<option value="">Sin datos</option>`;
+        } else if (tipo === 'TARJETAS') {
+            (db.medios.tarjeta || []).forEach(m => { html += `<option value="MEDIO_${m}">${m}</option>`; });
+            if(!db.medios.tarjeta || db.medios.tarjeta.length === 0) html = `<option value="">Sin datos</option>`;
+        } else if (tipo === 'CLIENTES') {
+            html = `<option value="CLI_CF">CONSUMIDOR FINAL</option>`;
+            Object.entries(db.clientes).forEach(([k,v]) => { html += `<option value="CLI_${k}">${v.nom}</option>`; });
+        } else if (tipo === 'PROVEEDORES') {
+            html = `<option value="PROV_OCASIONAL">PROV. OCASIONAL</option>`;
+            Object.entries(db.proveedores).forEach(([k,v]) => { html += `<option value="PROV_${k}">${v.nom}</option>`; });
+        }
+        subSelect.innerHTML = html; renderArqueo();
+    }
+    
+    function renderArqueo() {
+        let fD = document.getElementById('a-fecha-desde').value; let fH = document.getElementById('a-fecha-hasta').value; let fC = document.getElementById('a-filtro-subcuenta').value; let tI = 0, tE = 0; let htmlM = ""; let saldoA = 0; let totalD = 0; let totalH = 0;
+        
+        let movs = Object.entries(db.caja).sort((a,b) => {
+            let dateA = a[1].f || ""; let dateB = b[1].f || ""; if (dateA !== dateB) return dateA.localeCompare(dateB);
+            let timeA = a[1].h || ""; let timeB = b[1].h || ""; if (timeA !== timeB) return timeA.localeCompare(timeB);
+            return a[0].localeCompare(b[0]);
+        });
+
+        movs.forEach(([id, x]) => { 
+            if (!x || !x.f) return; if (fD && x.f < fD) return; if (fH && x.f > fH) return; 
+            
+            let monto = x.v || 0; let m = x.m || ''; let c = x.c || ''; let debe = 0; let haber = 0;
+            let isVentaCtaCte = m.includes('CUENTA CORRIENTE'); let isPagoRecibido = c.includes('PAGO RECIBIDO'); let isDeudaManual = c.includes('DEUDA MANUAL:');
+            let isCompraCtaCte = m.includes('CTA CTE PROVEEDOR'); let isPagoAProv = c.includes('PAGO A PROVEEDOR'); let isDeudaManualProv = c.includes('DEUDA MANUAL PROV');
+
+            if (!fC) return;
+
+            if (fC.startsWith('CLI_')) {
+                let keyBuscada = fC.replace('CLI_', '');
+                if (keyBuscada === 'CF' && x.cliKey !== "null") return;
+                if (keyBuscada !== 'CF' && x.cliKey !== keyBuscada) return;
+                if (!isVentaCtaCte && !isPagoRecibido && !isDeudaManual) return; 
+                if (isVentaCtaCte || isDeudaManual) { debe = monto; tI += monto; } else if (isPagoRecibido) { haber = monto; tE += monto; }
+            }
+            else if (fC.startsWith('PROV_')) {
+                let keyBuscada = fC.replace('PROV_', '');
+                if (keyBuscada === 'OCASIONAL' && x.cliKey !== "null") return;
+                if (keyBuscada !== 'OCASIONAL' && x.cliKey !== keyBuscada) return;
+                if (!isCompraCtaCte && !isPagoAProv && !isDeudaManualProv) return; 
+                if (isCompraCtaCte || isDeudaManualProv) { haber = monto; tE += monto; } else if (isPagoAProv) { debe = monto; tI += monto; }
+            }
+            else if (fC === 'CUENTA CORRIENTE') {
+                if (!isVentaCtaCte && !isPagoRecibido && !isDeudaManual) return; 
+                if (isVentaCtaCte || isDeudaManual) { debe = monto; tI += monto; } else if (isPagoRecibido) { haber = monto; tE += monto; }
+            } 
+            else if (fC === 'CTA CTE PROVEEDOR') {
+                if (!isCompraCtaCte && !isPagoAProv && !isDeudaManualProv) return; 
+                if (isCompraCtaCte || isDeudaManualProv) { haber = monto; tE += monto; } else if (isPagoAProv) { debe = monto; tI += monto; }
+            }
+            else {
+                let medioFiltro = fC.startsWith('MEDIO_') ? fC.replace('MEDIO_', '') : fC;
+                let montoAplicable = monto;
+
+                if (medioFiltro !== 'TODAS') {
+                    if (m.includes("DIVIDIDO")) {
+                        const regex = new RegExp(medioFiltro + "\\s*\\$(\\d+)"); const match = m.match(regex);
+                        if (match && match[1]) { montoAplicable = parseInt(match[1]); } else return;
+                    } else if (!m.includes(medioFiltro)) return;
+                } else {
+                    if (isVentaCtaCte || isDeudaManual || isCompraCtaCte || isDeudaManualProv) return; 
+                }
+                if (x.tp === 'ING') { debe = montoAplicable; tI += montoAplicable; } else { haber = montoAplicable; tE += montoAplicable; }
+            }
+            
+            totalD += debe; totalH += haber; saldoA += (debe - haber);
+            let fechaArg = x.f.split('-').reverse().join('/'); 
+            
+            htmlM += `<tr class="hover:bg-[var(--brand-light)] transition-colors bg-white"><td class="text-slate-500 text-[10px] pl-6">${fechaArg}</td><td class="font-bold text-[var(--brand-main)] text-[10px]">${id.substring(7, 12)}</td><td class="font-semibold text-slate-700 text-[10px]">${x.cli || '-'}</td><td class="uppercase text-slate-800 text-[10px] font-semibold">${x.c}</td><td class="uppercase text-[10px] font-semibold text-slate-500 text-left">${x.m || '-'}</td><td class="text-debe font-bold text-sm">${debe > 0 ? '$'+debe.toLocaleString('es-AR') : ''}</td><td class="text-haber font-bold text-sm">${haber > 0 ? '$'+haber.toLocaleString('es-AR') : ''}</td><td class="text-slate-900 font-bold text-sm pr-6">${formatMayorMoney(saldoA)}</td></tr>`; 
         });
         
-        document.getElementById('resumen-caja').innerHTML = `<div class="bg-white p-4 rounded-3xl border-b-4 border-emerald-400 text-center"><p class="text-[9px] font-bold text-slate-400 uppercase">Ingresos</p><p class="text-xl font-black text-emerald-500">$${tI.toLocaleString()}</p></div><div class="bg-white p-4 rounded-3xl border-b-4 border-rose-500 text-center"><p class="text-[9px] font-bold text-slate-400 uppercase">Egresos</p><p class="text-xl font-black text-rose-600">$${tE.toLocaleString()}</p></div><div class="bg-slate-900 p-4 rounded-3xl text-white text-center shadow-lg"><p class="text-[9px] font-bold text-slate-300 uppercase">Neto</p><p class="text-xl font-black">$${(tI-tE).toLocaleString()}</p></div>`;
-        document.getElementById('x-t').innerHTML = cH || '<tr><td colspan="6" class="text-center py-10 text-slate-300 italic">No hay resultados</td></tr>';
+        document.getElementById('a-resumen-global').innerHTML = `<div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm text-center"><p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Ingresos (Debe)</p><p class="text-2xl font-bold text-[var(--brand-dark)] mt-1">$${tI.toLocaleString('es-AR')}</p></div><div class="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm text-center"><p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Egresos (Haber)</p><p class="text-2xl font-bold text-[var(--brand-accent)] mt-1">$${tE.toLocaleString('es-AR')}</p></div><div class="bg-[var(--brand-light)] border border-[var(--brand-main)] p-5 rounded-2xl text-center shadow-sm"><p class="text-[9px] font-bold text-[var(--brand-main)] uppercase tracking-widest">Saldo Acumulado</p><p class="text-2xl font-black text-[var(--brand-dark)] mt-1">$${(tI - tE).toLocaleString('es-AR')}</p></div>`;
+        document.getElementById('a-mayor-tabla').innerHTML = htmlM || '<tr><td colspan="8" class="text-center py-8 text-slate-400 italic font-medium text-xs bg-white">Sin movimientos registrados</td></tr>';
+        document.getElementById('a-mayor-total').innerHTML = `<tr><td colspan="5" class="py-4 text-right text-[var(--brand-dark)] uppercase text-[10px] font-bold tracking-widest pl-6">Total Período:</td><td class="py-4 text-[var(--brand-dark)] text-sm font-bold">$${totalD.toLocaleString('es-AR')}</td><td class="py-4 text-haber text-sm font-bold">$${totalH.toLocaleString('es-AR')}</td><td class="py-4 pr-6 text-[var(--brand-dark)] font-black text-lg">${formatMayorMoney(saldoA)}</td></tr>`;
     }
-
-    async function elimMov(id) {
-        if(!confirm("¿Revertir operación?")) return;
-        const m = db.caja[id];
-        if(m.items) m.items.forEach(i => { if(db.stock[i.k]) db.stock[i.k].can += i.cant; });
-        if(m.m.includes("CUENTA CORRIENTE") && m.cliKey && db.clientes[m.cliKey]) {
-            db.clientes[m.cliKey].saldo -= m.v;
-            db.clientes[m.cliKey].deudas = db.clientes[m.cliKey].deudas.filter(d => d.id !== parseInt(id.substring(1)) && d.v !== m.v);
-        }
-        delete db.caja[id]; 
-        await syncDB("", db);
+    
+    // AJUSTES Y BACKUP
+    async function agregarMedio(tipo) { let inputI = tipo === 'transferencia' ? 'nueva-billetera' : 'nueva-tarjeta'; let val = document.getElementById(inputI).value.trim().toUpperCase(); if(!val) return; db.medios[tipo].push(val); document.getElementById(inputI).value = ''; await syncDB("medios", db.medios); }
+    async function elimMedio(tipo, idx) { if(confirm("¿Eliminar?")) { db.medios[tipo].splice(idx, 1); await syncDB("medios", db.medios); } }
+    function renderMedios() {
+        let bt = document.getElementById('lista-billeteras'), tt = document.getElementById('lista-tarjetas');
+        bt.innerHTML = db.medios.transferencia.map((m, i) => `<li class="flex justify-between items-center bg-white border border-slate-200 p-3 rounded-lg shadow-sm font-semibold text-[var(--brand-dark)]"><span class="text-xs">${m}</span><button onclick="elimMedio('transferencia', ${i})" class="text-slate-300 hover:text-[var(--brand-accent)] font-light text-base">✕</button></li>`).join('');
+        tt.innerHTML = db.medios.tarjeta.map((m, i) => `<li class="flex justify-between items-center bg-white border border-slate-200 p-3 rounded-lg shadow-sm font-semibold text-[var(--brand-dark)]"><span class="text-xs">${m}</span><button onclick="elimMedio('tarjeta', ${i})" class="text-slate-300 hover:text-[var(--brand-accent)] font-light text-base">✕</button></li>`).join('');
+        const selects = ['v-medio-1', 'v-medio-2', 'x-egr-medio']; selects.forEach(sId => { const s = document.getElementById(sId); const currentV = s.value; s.innerHTML = '<option value="EFECTIVO">EFECTIVO</option>' + db.medios.transferencia.map(m=>`<option value="${m}">${m}</option>`).join('') + db.medios.tarjeta.map(m=>`<option value="${m}">${m}</option>`).join(''); s.value = currentV || "EFECTIVO"; });
+        
+        let selectPagoCompra = document.getElementById('p-pago');
+        if(selectPagoCompra) { let currentP = selectPagoCompra.value; selectPagoCompra.innerHTML = '<option value="EFECTIVO">EFECTIVO</option><option value="TRANSFERENCIA">TRANSFERENCIA</option><option value="TARJETA">TARJETA</option><option value="CTA CTE PROVEEDOR">CUENTA CORRIENTE (FIADO)</option>'; selectPagoCompra.value = currentP || "EFECTIVO"; }
+        if(document.getElementById('a').classList.contains('activa')) actualizarSubcuentasBalance();
     }
-
+    
+    function descargarBackup() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "backup_sofia_" + new Date().toISOString().split('T')[0] + ".json");
+        document.body.appendChild(downloadAnchorNode); downloadAnchorNode.click(); downloadAnchorNode.remove();
+    }
+    
+    // EXPORTAR EXCEL
     function exportarExcel(tipo) {
-        let data = [];
-        let nom = "";
-        if (tipo === 'stock') {
-            nom = "STOCK";
-            data = Object.values(db.stock).map(s => ({ CODIGO: s.cod, PRODUCTO: s.nom, MARCA: s.mar, TALLE: s.tal, COLOR: s.col, CANT: s.can, COSTO: s.cos, VENTA: s.pre }));
-        } else if (tipo === 'clientes') {
-            nom = "CLIENTES";
-            data = Object.values(db.clientes).map(c => ({ NOMBRE: c.nom, DNI: c.dni, CEL: c.cel, SALDO: c.saldo || 0 }));
-        } else {
-            nom = tipo === 'ventas' ? "VENTAS_HOY" : "CAJA";
-            const hoy = new Date().toISOString().split('T')[0];
-            data = Object.values(db.caja).filter(x => tipo === 'ventas' ? x.f === hoy && x.tp === "ING" : true).map(x => ({ FECHA: x.f, HORA: x.h, CLIENTE: x.cli, CONCEPTO: x.c, MONTO: x.v, MEDIO: x.m }));
-        }
-        if(!data.length) return alert("Sin datos");
-        const ws = XLSX.utils.json_to_sheet(data); 
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Reporte");
-        XLSX.writeFile(wb, `${nom}_${new Date().toLocaleDateString()}.xlsx`);
+        let data = [], nom = "";
+        if (tipo === 'mayor') {
+            let fC = document.getElementById('a-filtro-subcuenta').value; nom = fC === "TODAS" ? "LIBRO_MAYOR" : `MAYOR_${fC}`;
+            let fD = document.getElementById('a-fecha-desde').value; let fH = document.getElementById('a-fecha-hasta').value;
+            let movs = Object.entries(db.caja).sort((a,b) => { let dateA = a[1].f || ""; let dateB = b[1].f || ""; if (dateA !== dateB) return dateA.localeCompare(dateB); let timeA = a[1].h || ""; let timeB = b[1].h || ""; if (timeA !== timeB) return timeA.localeCompare(timeB); return a[0].localeCompare(b[0]); });
+            let saldoA = 0;
+            
+            movs.forEach(([id, x]) => {
+                if (!x || !x.f) return; if (fD && x.f < fD) return; if (fH && x.f > fH) return;
+                let monto = x.v || 0; let m = x.m || ''; let c = x.c || ''; let debe = 0; let haber = 0;
+                let isVentaCtaCte = m.includes('CUENTA CORRIENTE'); let isPagoRecibido = c.includes('PAGO RECIBIDO'); let isDeudaManual = c.includes('DEUDA MANUAL:'); let isCompraCtaCte = m.includes('CTA CTE PROVEEDOR'); let isPagoAProv = c.includes('PAGO A PROVEEDOR'); let isDeudaManualProv = c.includes('DEUDA MANUAL PROV');
+
+                if (!fC) return;
+                if (fC.startsWith('CLI_')) { let keyBuscada = fC.replace('CLI_', ''); if (keyBuscada === 'CF' && x.cliKey !== "null") return; if (keyBuscada !== 'CF' && x.cliKey !== keyBuscada) return; if (!isVentaCtaCte && !isPagoRecibido && !isDeudaManual) return; if (isVentaCtaCte || isDeudaManual) debe = monto; else if (isPagoRecibido) haber = monto;
+                } else if (fC.startsWith('PROV_')) { let keyBuscada = fC.replace('PROV_', ''); if (keyBuscada === 'OCASIONAL' && x.cliKey !== "null") return; if (keyBuscada !== 'OCASIONAL' && x.cliKey !== keyBuscada) return; if (!isCompraCtaCte && !isPagoAProv && !isDeudaManualProv) return; if (isCompraCtaCte || isDeudaManualProv) haber = monto; else if (isPagoAProv) debe = monto;
+                } else if (fC === 'CUENTA CORRIENTE') { if (!isVentaCtaCte && !isPagoRecibido && !isDeudaManual) return; if (isVentaCtaCte || isDeudaManual) debe = monto; else if (isPagoRecibido) haber = monto;
+                } else if (fC === 'CTA CTE PROVEEDOR') { if (!isCompraCtaCte && !isPagoAProv && !isDeudaManualProv) return; if (isCompraCtaCte || isDeudaManualProv) haber = monto; else if (isPagoAProv) debe = monto;
+                } else {
+                    let medioFiltro = fC.startsWith('MEDIO_') ? fC.replace('MEDIO_', '') : fC; let montoAplicable = monto;
+                    if (medioFiltro !== 'TODAS') { if (m.includes("DIVIDIDO")) { const regex = new RegExp(medioFiltro + "\\s*\\$(\\d+)"); const match = m.match(regex); if (match && match[1]) { montoAplicable = parseInt(match[1]); } else { return; } } else { if (!m.includes(medioFiltro)) return; }
+                    } else { if (isVentaCtaCte || isDeudaManual || isCompraCtaCte || isDeudaManualProv) return; }
+                    if (x.tp === 'ING') debe = montoAplicable; else haber = montoAplicable;
+                }
+                saldoA += (debe - haber);
+                data.push({ "Fecha": x.f.split('-').reverse().join('/'), "Asiento": id.substring(7, 12), "Cliente/Prov": x.cli || "-", "Concepto": x.c, "Medio": x.m || "-", "Debe": debe > 0 ? debe : "", "Haber": haber > 0 ? haber : "", "Saldo": saldoA });
+            });
+            
+        } else if (tipo === 'stock') { nom = "STOCK"; data = Object.values(db.stock).map(s => ({ CODIGO: s.cod, PRODUCTO: s.nom, CANT: s.can, VENTA: s.pre })); }
+        else if (tipo === 'clientes') { nom = "CLIENTES"; data = Object.values(db.clientes).map(c => ({ NOMBRE: c.nom, SALDO: c.saldo || 0 })); }
+        else { nom = "CAJA"; data = Object.values(db.caja).map(x => ({ FECHA: x.f, CONCEPTO: x.c, MONTO: x.v, MEDIO: x.m })); }
+        const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Reporte"); XLSX.writeFile(wb, `${nom}_${new Date().toLocaleDateString()}.xlsx`);
     }
 
-    function ir(id, btn) { 
-        document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); 
-        document.getElementById(id).classList.add('activa'); 
-        btn.classList.add('active'); 
-    }
-
-    function toggleDetallePago() { 
-        const m = document.getElementById('v-pago').value, s = document.getElementById('v-pago-detalle');
-        const DET = { "TRANSFERENCIA": ["MERCADO PAGO", "UALA", "BRUBANK"], "TARJETA": ["DEBITO", "CREDITO"] }; 
-        if(DET[m]){ 
-            s.classList.remove('hidden'); 
-            s.innerHTML = DET[m].map(o=>`<option value="${o}">${o}</option>`).join('');
-        } else { s.classList.add('hidden'); } 
-    }
-
-    function renderVUI() { 
-        document.getElementById('v-pago').innerHTML = ["EFECTIVO", "TRANSFERENCIA", "TARJETA", "CUENTA CORRIENTE"].map(m=>`<option value="${m}">${m}</option>`).join('');
-        document.getElementById('v-cli').innerHTML = '<option value="null">CONSUMIDOR FINAL</option>' + Object.entries(db.clientes).map(([k,v])=>`<option value="${k}">${v.nom}</option>`).join(''); 
-    }
-
-    function limpiarInputs(p) { 
-        document.querySelectorAll(`input[id^="${p}-"]`).forEach(i => i.value = '');
-    }
-
-    document.addEventListener('click', (e) => { 
-        if (e.target.id !== 'v-scan') document.getElementById('v-sugerencias').classList.add('hidden'); 
-    });
+    function ir(id, btn) { document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa')); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('activa'); btn.classList.add('active'); if(id === 'a') actualizarSubcuentasBalance(); }
+    function renderVUI() { document.getElementById('v-cli').innerHTML = '<option value="null">CONSUMIDOR FINAL</option>' + Object.entries(db.clientes).map(([k,v])=>`<option value="${k}">${v.nom}</option>`).join(''); }
+    function limpiarInputs(p) { document.querySelectorAll(`input[id^="${p}-"]`).forEach(i => i.value = ''); }
+    function cerrarFicha() { document.getElementById('modal-cliente').classList.add('hidden'); clienteActualKey = null; }
+    function editarCli(k) { let c = db.clientes[k]; document.getElementById('c-key').value = k; document.getElementById('c-nom').value = c.nom; document.getElementById('c-dni').value = c.dni; document.getElementById('c-cel').value = c.cel; document.getElementById('c-dir').value = c.dir; document.getElementById('c-rec').value = c.rec; window.scrollTo(0,0); }
+    async function elimCli(k) { if(confirm("¿Eliminar?")) { delete db.clientes[k]; await syncDB("clientes", db.clientes); } }
 
     loadDB();
 </script>
